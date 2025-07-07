@@ -1,0 +1,12 @@
+- [ ] Music Artist / Musician  
+- [ ] Visual Artist (painter, illustrator, etc.)  
+- [ ] Performing Artist (actor, dancer, spoken word)  
+- [ ] Photographer  
+- [ ] Videographer  
+- [ ] Model  
+- [ ] Stylist  
+- [ ] Creative Director  
+- [ ] Organizer / Event Planner  
+- [ ] Business Owner  
+- [ ] Supporter / Community Member  
+- [ ] Other: __________

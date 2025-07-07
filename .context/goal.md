@@ -1,0 +1,1 @@
+Help me create a full-stack landing page with a styled form that validates user input, submits it via fetch, and appends it to a Google Sheet using the Sheets API with a service account. Use modern standards and best practices.
