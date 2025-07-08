@@ -10,17 +10,35 @@ export default function FormPage() {
   const [typedText, setTypedText] = useState("");
   const [showCursor, setShowCursor] = useState(true);
   const [isLoading, setIsLoading] = useState(false); // New loading state
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    city: "",
-    state: "",
-    instagram: "",
-    tiktok: "", // New TikTok field
-    roles: [],
-    otherRole: ""
+  const [formData, setFormData] = useState(() => {
+    // Initialize form data from localStorage if available
+    if (typeof window !== 'undefined') {
+      const savedFormData = localStorage.getItem('formData');
+      return savedFormData ? JSON.parse(savedFormData) : {
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        city: "",
+        state: "",
+        instagram: "",
+        tiktok: "",
+        roles: [],
+        otherRole: ""
+      };
+    }
+    return {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      city: "",
+      state: "",
+      instagram: "",
+      tiktok: "",
+      roles: [],
+      otherRole: ""
+    };
   });
 
   // Automatically focus the input when the logo view is active
@@ -65,6 +83,13 @@ export default function FormPage() {
   useEffect(() => {
     document.body.style.overflow = view === "form" ? "auto" : "hidden";
   }, [view]);
+
+  // Save form data to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('formData', JSON.stringify(formData));
+    }
+  }, [formData]);
 
   // Unified checkbox handler
   const handleCheckboxChange = (e) => {
@@ -167,6 +192,7 @@ export default function FormPage() {
     try {
       // Send the data to your script
       await fetch(scriptURL, { method: 'POST', body: formDataToSend });
+      localStorage.removeItem('formData'); // Clear form data from localStorage on successful submission
       // Introduce a delay before transition
       await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
       // Proceed with the transition after successful submission
@@ -198,6 +224,7 @@ export default function FormPage() {
             sizes="100vw"
             style={{ width: '90%', height: 'auto', maxWidth: '800px' }}
             priority
+            draggable="false"
           />
         </div>
       )}
@@ -755,6 +782,7 @@ export default function FormPage() {
             sizes="100vw"
             style={{ width: '90%', height: 'auto', maxWidth: '800px' }}
             priority
+            draggable="false"
           />
           <div className="mt-8">
             <input
