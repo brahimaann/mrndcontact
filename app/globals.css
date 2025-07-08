@@ -26,6 +26,9 @@ input[type="checkbox"] {
 
 .checkbox-wrapper .label {
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
 }
 
 .checkbox-wrapper .check {
@@ -52,6 +55,20 @@ input[type="checkbox"] {
   opacity: 1;
 }
 
+/* New Roles Grid Layout */
+.roles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .roles-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 @font-face {
   font-family: 'Dogica';
   src: url('/dogica.otf') format('opentype');
@@ -63,7 +80,6 @@ body {
   background-color: #ffffff;
   color: #000000;
   font-family: 'Dogica', cursive;
-
 }
 
 .container {

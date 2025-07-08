@@ -12,20 +12,22 @@ export default function FormPage() {
   const [isLoading, setIsLoading] = useState(false); // New loading state
   const [formData, setFormData] = useState(() => {
     // Initialize form data from localStorage if available
-    if (typeof window !== 'undefined') {
-      const savedFormData = localStorage.getItem('formData');
-      return savedFormData ? JSON.parse(savedFormData) : {
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        city: "",
-        state: "",
-        instagram: "",
-        tiktok: "",
-        roles: [],
-        otherRole: ""
-      };
+    if (typeof window !== "undefined") {
+      const savedFormData = localStorage.getItem("formData");
+      return savedFormData
+        ? JSON.parse(savedFormData)
+        : {
+            firstName: "",
+            lastName: "",
+            email: "",
+            phone: "",
+            city: "",
+            state: "",
+            instagram: "",
+            tiktok: "",
+            roles: [],
+            otherRole: "",
+          };
     }
     return {
       firstName: "",
@@ -37,7 +39,7 @@ export default function FormPage() {
       instagram: "",
       tiktok: "",
       roles: [],
-      otherRole: ""
+      otherRole: "",
     };
   });
 
@@ -86,8 +88,8 @@ export default function FormPage() {
 
   // Save form data to localStorage whenever it changes
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('formData', JSON.stringify(formData));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("formData", JSON.stringify(formData));
     }
   }, [formData]);
 
@@ -99,7 +101,7 @@ export default function FormPage() {
       roles: checked
         ? [...prev.roles, value]
         : prev.roles.filter((r) => r !== value),
-      otherRole: value === "Other" && !checked ? "" : prev.otherRole
+      otherRole: value === "Other" && !checked ? "" : prev.otherRole,
     }));
   };
 
@@ -174,32 +176,33 @@ export default function FormPage() {
 
     setIsLoading(true); // Set loading state to true
 
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwbBQyWZcz61Wp6pCRqCfEYFqbPXzS1FNiolnQrfO1FwAF_LabcWPfG4gEPaWLWY5qXoQ/exec"; // ❗️ PASTE YOUR URL HERE
+    const scriptURL =
+      "https://script.google.com/macros/s/AKfycbwbBQyWZcz61Wp6pCRqCfEYFqbPXzS1FNiolnQrfO1FwAF_LabcWPfG4gEPaWLWY5qXoQ/exec"; // ❗️ PASTE YOUR URL HERE
     const formDataToSend = new FormData();
 
     // Append all your form fields
-    formDataToSend.append('firstName', formData.firstName);
-    formDataToSend.append('lastName', formData.lastName);
-    formDataToSend.append('email', formData.email);
-    formDataToSend.append('phone', formData.phone);
-    formDataToSend.append('city', formData.city);
-    formDataToSend.append('state', formData.state);
-    formDataToSend.append('instagram', formData.instagram);
-    formDataToSend.append('tiktok', formData.tiktok); // Add the new tiktok field
-    formDataToSend.append('roles', formData.roles.join(', ')); // Convert array to a string
-    formDataToSend.append('otherRole', formData.otherRole);
+    formDataToSend.append("firstName", formData.firstName);
+    formDataToSend.append("lastName", formData.lastName);
+    formDataToSend.append("email", formData.email);
+    formDataToSend.append("phone", formData.phone);
+    formDataToSend.append("city", formData.city);
+    formDataToSend.append("state", formData.state);
+    formDataToSend.append("instagram", formData.instagram);
+    formDataToSend.append("tiktok", formData.tiktok); // Add the new tiktok field
+    formDataToSend.append("roles", formData.roles.join(", ")); // Convert array to a string
+    formDataToSend.append("otherRole", formData.otherRole);
 
     try {
       // Send the data to your script
-      await fetch(scriptURL, { method: 'POST', body: formDataToSend });
-      localStorage.removeItem('formData'); // Clear form data from localStorage on successful submission
+      await fetch(scriptURL, { method: "POST", body: formDataToSend });
+      localStorage.removeItem("formData"); // Clear form data from localStorage on successful submission
       // Introduce a delay before transition
-      await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // 1 second delay
       // Proceed with the transition after successful submission
       await performTransition("logo");
     } catch (error) {
-      console.error('Error submitting to Google Sheet!', error.message);
-      alert('There was an error submitting your form. Please try again.');
+      console.error("Error submitting to Google Sheet!", error.message);
+      alert("There was an error submitting your form. Please try again.");
     } finally {
       setIsLoading(false); // Always reset loading state
     }
@@ -222,7 +225,7 @@ export default function FormPage() {
             width={0}
             height={0}
             sizes="100vw"
-            style={{ width: '90%', height: 'auto', maxWidth: '800px' }}
+            style={{ width: "90%", height: "auto", maxWidth: "800px" }}
             priority
             draggable="false"
           />
@@ -231,13 +234,16 @@ export default function FormPage() {
 
       {/* FORM */}
       {view === "form" && (
-            <div className="flex items-center justify-center min-h-screen p-8 overflow-x-hidden">
-          <div className="w-10/12 max-w-3xl">
+        <div className="flex items-center justify-center min-h-screen p-8 overflow-x-hidden">
+          <div className="w-13/16 max-w-3xl">
             <form onSubmit={handleSubmit}>
               <div className="my-5">
-                <div className="flex -mx-2">
-                  <div className="px-2 w-1/2">
-                    <label htmlFor="firstName" className="block font-bold mb-2">
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="w-full md:w-[48%]">
+                    <label
+                      htmlFor="firstName"
+                      className="block font-bold mb-2"
+                    >
                       First Name
                     </label>
                     <input
@@ -250,8 +256,11 @@ export default function FormPage() {
                       className="w-full"
                     />
                   </div>
-                  <div className="px-2 w-1/2">
-                    <label htmlFor="lastName" className="block font-bold mb-2">
+                  <div className="w-full md:w-[48%]">
+                    <label
+                      htmlFor="lastName"
+                      className="block font-bold mb-2"
+                    >
                       Last Name
                     </label>
                     <input
@@ -358,12 +367,22 @@ export default function FormPage() {
                       className="check"
                       name="roles"
                       value="Musician"
-                      checked={formData.roles.includes('Musician')}
+                      checked={formData.roles.includes("Musician")}
                       onChange={handleCheckboxChange}
                     />
-                    <label htmlFor="role-music-artist" className="label inline-flex items-center">
+                    <label
+                      htmlFor="role-music-artist"
+                      className="label inline-flex items-center"
+                    >
                       <svg width="45" height="45" viewBox="0 0 95 95">
-                        <rect x="30" y="20" width="50" height="50" stroke="black" fill="white" />
+                        <rect
+                          x="30"
+                          y="20"
+                          width="50"
+                          height="50"
+                          stroke="black"
+                          fill="white"
+                        />
                         <g transform="translate(0,-952.36222)">
                           <path
                             d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
@@ -385,12 +404,22 @@ export default function FormPage() {
                       className="check"
                       name="roles"
                       value="Visual Artist"
-                      checked={formData.roles.includes('Visual Artist')}
+                      checked={formData.roles.includes("Visual Artist")}
                       onChange={handleCheckboxChange}
                     />
-                    <label htmlFor="role-visual-artist" className="label inline-flex items-center">
+                    <label
+                      htmlFor="role-visual-artist"
+                      className="label inline-flex items-center"
+                    >
                       <svg width="45" height="45" viewBox="0 0 95 95">
-                        <rect x="30" y="20" width="50" height="50" stroke="black" fill="white" />
+                        <rect
+                          x="30"
+                          y="20"
+                          width="50"
+                          height="50"
+                          stroke="black"
+                          fill="white"
+                        />
                         <g transform="translate(0,-952.36222)">
                           <path
                             d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
@@ -412,12 +441,22 @@ export default function FormPage() {
                       className="check"
                       name="roles"
                       value="Actor"
-                      checked={formData.roles.includes('Actor')}
+                      checked={formData.roles.includes("Actor")}
                       onChange={handleCheckboxChange}
                     />
-                    <label htmlFor="role-actor" className="label inline-flex items-center">
+                    <label
+                      htmlFor="role-actor"
+                      className="label inline-flex items-center"
+                    >
                       <svg width="45" height="45" viewBox="0 0 95 95">
-                        <rect x="30" y="20" width="50" height="50" stroke="black" fill="white" />
+                        <rect
+                          x="30"
+                          y="20"
+                          width="50"
+                          height="50"
+                          stroke="black"
+                          fill="white"
+                        />
                         <g transform="translate(0,-952.36222)">
                           <path
                             d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
@@ -439,12 +478,22 @@ export default function FormPage() {
                       className="check"
                       name="roles"
                       value="Dancer"
-                      checked={formData.roles.includes('Dancer')}
+                      checked={formData.roles.includes("Dancer")}
                       onChange={handleCheckboxChange}
                     />
-                    <label htmlFor="role-dancer" className="label inline-flex items-center">
+                    <label
+                      htmlFor="role-dancer"
+                      className="label inline-flex items-center"
+                    >
                       <svg width="45" height="45" viewBox="0 0 95 95">
-                        <rect x="30" y="20" width="50" height="50" stroke="black" fill="white" />
+                        <rect
+                          x="30"
+                          y="20"
+                          width="50"
+                          height="50"
+                          stroke="black"
+                          fill="white"
+                        />
                         <g transform="translate(0,-952.36222)">
                           <path
                             d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
@@ -466,12 +515,22 @@ export default function FormPage() {
                       className="check"
                       name="roles"
                       value="Poet"
-                      checked={formData.roles.includes('Poet')}
+                      checked={formData.roles.includes("Poet")}
                       onChange={handleCheckboxChange}
                     />
-                    <label htmlFor="role-poet" className="label inline-flex items-center">
+                    <label
+                      htmlFor="role-poet"
+                      className="label inline-flex items-center"
+                    >
                       <svg width="45" height="45" viewBox="0 0 95 95">
-                        <rect x="30" y="20" width="50" height="50" stroke="black" fill="white" />
+                        <rect
+                          x="30"
+                          y="20"
+                          width="50"
+                          height="50"
+                          stroke="black"
+                          fill="white"
+                        />
                         <g transform="translate(0,-952.36222)">
                           <path
                             d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
@@ -493,12 +552,22 @@ export default function FormPage() {
                       className="check"
                       name="roles"
                       value="Photographer"
-                      checked={formData.roles.includes('Photographer')}
+                      checked={formData.roles.includes("Photographer")}
                       onChange={handleCheckboxChange}
                     />
-                    <label htmlFor="role-photographer" className="label inline-flex items-center">
+                    <label
+                      htmlFor="role-photographer"
+                      className="label inline-flex items-center"
+                    >
                       <svg width="45" height="45" viewBox="0 0 95 95">
-                        <rect x="30" y="20" width="50" height="50" stroke="black" fill="white" />
+                        <rect
+                          x="30"
+                          y="20"
+                          width="50"
+                          height="50"
+                          stroke="black"
+                          fill="white"
+                        />
                         <g transform="translate(0,-952.36222)">
                           <path
                             d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
@@ -520,12 +589,22 @@ export default function FormPage() {
                       className="check"
                       name="roles"
                       value="Videographer"
-                      checked={formData.roles.includes('Videographer')}
+                      checked={formData.roles.includes("Videographer")}
                       onChange={handleCheckboxChange}
                     />
-                    <label htmlFor="role-videographer" className="label inline-flex items-center">
+                    <label
+                      htmlFor="role-videographer"
+                      className="label inline-flex items-center"
+                    >
                       <svg width="45" height="45" viewBox="0 0 95 95">
-                        <rect x="30" y="20" width="50" height="50" stroke="black" fill="white" />
+                        <rect
+                          x="30"
+                          y="20"
+                          width="50"
+                          height="50"
+                          stroke="black"
+                          fill="white"
+                        />
                         <g transform="translate(0,-952.36222)">
                           <path
                             d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
@@ -547,12 +626,22 @@ export default function FormPage() {
                       className="check"
                       name="roles"
                       value="Model"
-                      checked={formData.roles.includes('Model')}
+                      checked={formData.roles.includes("Model")}
                       onChange={handleCheckboxChange}
                     />
-                    <label htmlFor="role-model" className="label inline-flex items-center">
+                    <label
+                      htmlFor="role-model"
+                      className="label inline-flex items-center"
+                    >
                       <svg width="45" height="45" viewBox="0 0 95 95">
-                        <rect x="30" y="20" width="50" height="50" stroke="black" fill="white" />
+                        <rect
+                          x="30"
+                          y="20"
+                          width="50"
+                          height="50"
+                          stroke="black"
+                          fill="white"
+                        />
                         <g transform="translate(0,-952.36222)">
                           <path
                             d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
@@ -574,12 +663,22 @@ export default function FormPage() {
                       className="check"
                       name="roles"
                       value="Stylist"
-                      checked={formData.roles.includes('Stylist')}
+                      checked={formData.roles.includes("Stylist")}
                       onChange={handleCheckboxChange}
                     />
-                    <label htmlFor="role-stylist" className="label inline-flex items-center">
+                    <label
+                      htmlFor="role-stylist"
+                      className="label inline-flex items-center"
+                    >
                       <svg width="45" height="45" viewBox="0 0 95 95">
-                        <rect x="30" y="20" width="50" height="50" stroke="black" fill="white" />
+                        <rect
+                          x="30"
+                          y="20"
+                          width="50"
+                          height="50"
+                          stroke="black"
+                          fill="white"
+                        />
                         <g transform="translate(0,-952.36222)">
                           <path
                             d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
@@ -601,12 +700,22 @@ export default function FormPage() {
                       className="check"
                       name="roles"
                       value="Creative Director"
-                      checked={formData.roles.includes('Creative Director')}
+                      checked={formData.roles.includes("Creative Director")}
                       onChange={handleCheckboxChange}
                     />
-                    <label htmlFor="role-creative-director" className="label inline-flex items-center">
+                    <label
+                      htmlFor="role-creative-director"
+                      className="label inline-flex items-center"
+                    >
                       <svg width="45" height="45" viewBox="0 0 95 95">
-                        <rect x="30" y="20" width="50" height="50" stroke="black" fill="white" />
+                        <rect
+                          x="30"
+                          y="20"
+                          width="50"
+                          height="50"
+                          stroke="black"
+                          fill="white"
+                        />
                         <g transform="translate(0,-952.36222)">
                           <path
                             d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
@@ -628,12 +737,22 @@ export default function FormPage() {
                       className="check"
                       name="roles"
                       value="Organizer"
-                      checked={formData.roles.includes('Organizer')}
+                      checked={formData.roles.includes("Organizer")}
                       onChange={handleCheckboxChange}
                     />
-                    <label htmlFor="role-organizer-event-planner" className="label inline-flex items-center">
+                    <label
+                      htmlFor="role-organizer-event-planner"
+                      className="label inline-flex items-center"
+                    >
                       <svg width="45" height="45" viewBox="0 0 95 95">
-                        <rect x="30" y="20" width="50" height="50" stroke="black" fill="white" />
+                        <rect
+                          x="30"
+                          y="20"
+                          width="50"
+                          height="50"
+                          stroke="black"
+                          fill="white"
+                        />
                         <g transform="translate(0,-952.36222)">
                           <path
                             d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
@@ -655,12 +774,22 @@ export default function FormPage() {
                       className="check"
                       name="roles"
                       value="Business Owner"
-                      checked={formData.roles.includes('Business Owner')}
+                      checked={formData.roles.includes("Business Owner")}
                       onChange={handleCheckboxChange}
                     />
-                    <label htmlFor="role-business-owner" className="label inline-flex items-center">
+                    <label
+                      htmlFor="role-business-owner"
+                      className="label inline-flex items-center"
+                    >
                       <svg width="45" height="45" viewBox="0 0 95 95">
-                        <rect x="30" y="20" width="50" height="50" stroke="black" fill="white" />
+                        <rect
+                          x="30"
+                          y="20"
+                          width="50"
+                          height="50"
+                          stroke="black"
+                          fill="white"
+                        />
                         <g transform="translate(0,-952.36222)">
                           <path
                             d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
@@ -682,12 +811,22 @@ export default function FormPage() {
                       className="check"
                       name="roles"
                       value="Supporter"
-                      checked={formData.roles.includes('Supporter')}
+                      checked={formData.roles.includes("Supporter")}
                       onChange={handleCheckboxChange}
                     />
-                    <label htmlFor="role-supporter-community-member" className="label inline-flex items-center">
+                    <label
+                      htmlFor="role-supporter-community-member"
+                      className="label inline-flex items-center"
+                    >
                       <svg width="45" height="45" viewBox="0 0 95 95">
-                        <rect x="30" y="20" width="50" height="50" stroke="black" fill="white" />
+                        <rect
+                          x="30"
+                          y="20"
+                          width="50"
+                          height="50"
+                          stroke="black"
+                          fill="white"
+                        />
                         <g transform="translate(0,-952.36222)">
                           <path
                             d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
@@ -709,12 +848,22 @@ export default function FormPage() {
                       className="check"
                       name="roles"
                       value="Other"
-                      checked={formData.roles.includes('Other')}
+                      checked={formData.roles.includes("Other")}
                       onChange={handleCheckboxChange}
                     />
-                    <label htmlFor="role-other" className="label inline-flex items-center">
+                    <label
+                      htmlFor="role-other"
+                      className="label inline-flex items-center"
+                    >
                       <svg width="45" height="45" viewBox="0 0 95 95">
-                        <rect x="30" y="20" width="50" height="50" stroke="black" fill="white" />
+                        <rect
+                          x="30"
+                          y="20"
+                          width="50"
+                          height="50"
+                          stroke="black"
+                          fill="white"
+                        />
                         <g transform="translate(0,-952.36222)">
                           <path
                             d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
@@ -729,7 +878,7 @@ export default function FormPage() {
                     </label>
                   </div>
                 </div>
-                {formData.roles.includes('Other') && (
+                {formData.roles.includes("Other") && (
                   <div className="mt-4">
                     <label htmlFor="otherRole" className="block font-bold mb-2">
                       Please specify:
@@ -753,7 +902,11 @@ export default function FormPage() {
                   disabled={isLoading}
                 >
                   {isLoading ? (
-                    <span className="pulsing-dots"><span>•</span><span>•</span><span>•</span></span>
+                    <span className="pulsing-dots">
+                      <span>•</span>
+                      <span>•</span>
+                      <span>•</span>
+                    </span>
                   ) : (
                     "Submit"
                   )}
@@ -770,7 +923,10 @@ export default function FormPage() {
           className="fixed inset-0 flex flex-col items-center justify-center z-50"
           style={{ width: "100vw", height: "100vh" }}
         >
-          <div className="text-center text-4xl mb-8" style={{ fontFamily: 'Dogica, cursive' }}>
+          <div
+            className="text-center text-4xl mb-8"
+            style={{ fontFamily: "Dogica, cursive" }}
+          >
             {typedText}
             {showCursor && <span className="blinking-cursor">|</span>}
           </div>
@@ -780,7 +936,7 @@ export default function FormPage() {
             width={0}
             height={0}
             sizes="100vw"
-            style={{ width: '90%', height: 'auto', maxWidth: '800px' }}
+            style={{ width: "90%", height: "auto", maxWidth: "800px" }}
             priority
             draggable="false"
           />
