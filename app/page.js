@@ -7,6 +7,9 @@ import gsap from "gsap";
 export default function FormPage() {
   const [view, setView] = useState("splash");
   const passInputRef = useRef(null); // Ref for the password input
+  const [typedText, setTypedText] = useState("");
+  const [showCursor, setShowCursor] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // New loading state
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -24,6 +27,37 @@ export default function FormPage() {
   useEffect(() => {
     if (view === "logo" && passInputRef.current) {
       passInputRef.current.focus();
+    }
+  }, [view]);
+
+  // Typewriter effect for "MESSAGE SENT"
+  useEffect(() => {
+    if (view === "logo") {
+      const text = " MESSAGE SENT";
+      let charIndex = 0;
+      setTypedText(""); // Clear text when entering logo view
+      setShowCursor(true); // Show cursor initially
+
+      const typeCharacter = () => {
+        if (charIndex < text.length) {
+          setTypedText((prev) => prev + text.charAt(charIndex));
+          charIndex++;
+          setTimeout(typeCharacter, 100); // Typing speed (milliseconds per character)
+        } else {
+          // Keep cursor blinking for a bit after typing is complete
+          setTimeout(() => {
+            setShowCursor(false); // Hide cursor after a delay
+          }, 1000); // Adjust delay as needed
+        }
+      };
+
+      typeCharacter(); // Start typing
+
+      return () => {
+        // Cleanup function to clear any pending timeouts if the component unmounts or view changes
+        // (This is a simplified cleanup, in a real app you might track timeout IDs)
+        setShowCursor(false); // Ensure cursor is hidden on cleanup
+      };
     }
   }, [view]);
 
@@ -113,6 +147,8 @@ export default function FormPage() {
       return;
     }
 
+    setIsLoading(true); // Set loading state to true
+
     const scriptURL = "https://script.google.com/macros/s/AKfycbwbBQyWZcz61Wp6pCRqCfEYFqbPXzS1FNiolnQrfO1FwAF_LabcWPfG4gEPaWLWY5qXoQ/exec"; // ❗️ PASTE YOUR URL HERE
     const formDataToSend = new FormData();
 
@@ -131,11 +167,15 @@ export default function FormPage() {
     try {
       // Send the data to your script
       await fetch(scriptURL, { method: 'POST', body: formDataToSend });
+      // Introduce a delay before transition
+      await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
       // Proceed with the transition after successful submission
       await performTransition("logo");
     } catch (error) {
       console.error('Error submitting to Google Sheet!', error.message);
       alert('There was an error submitting your form. Please try again.');
+    } finally {
+      setIsLoading(false); // Always reset loading state
     }
   };
 
@@ -683,8 +723,13 @@ export default function FormPage() {
                 <button
                   type="submit"
                   className="px-6 py-2 border border-gray-400 rounded font-bold"
+                  disabled={isLoading}
                 >
-                  Submit
+                  {isLoading ? (
+                    <span className="pulsing-dots"><span>•</span><span>•</span><span>•</span></span>
+                  ) : (
+                    "Submit"
+                  )}
                 </button>
               </div>
             </form>
@@ -698,6 +743,10 @@ export default function FormPage() {
           className="fixed inset-0 flex flex-col items-center justify-center z-50"
           style={{ width: "100vw", height: "100vh" }}
         >
+          <div className="text-center text-4xl mb-8" style={{ fontFamily: 'Dogica, cursive' }}>
+            {typedText}
+            {showCursor && <span className="blinking-cursor">|</span>}
+          </div>
           <Image
             src="/MRND TP.png"
             alt="MRND Logo"
