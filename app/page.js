@@ -1,71 +1,99 @@
-// app/page.js
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { PASSWORD_TO_SLUG } from "./poi/poi_passwords";
 
 export default function Home() {
-  const router = useRouter();
+  const [phase, setPhase] = useState("loader");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
-  const handlePasswordSubmit = (e) => {
+  const handleEnter = () => setPhase("split");
+
+const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-    if (password === "123456") {
-      router.push("/contact?view=logo");
-    } else {
-      alert("Incorrect password");
+    const raw = password.trim();
+    const res = await fetch("/api/poi-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: raw }),
+    });
+    if (!res.ok) {
+      alert("Invalid password. Please try again.");
+      return;
     }
-  };
+    const { slug } = await res.json();
+    router.push(`/poi/${encodeURIComponent(slug)}`);
+ };
 
+  if (phase === "loader") {
+    return (
+      <main className="min-h-screen w-full flex items-center justify-center bg-black text-white">
+        {/* Replace this with your actual loader UI if you already have one */}
+        <button
+          onClick={handleEnter}
+          className="rounded-2xl px-8 py-4 border border-white/20 hover:border-white transition"
+        >
+          Enter
+        </button>
+      </main>
+    );
+  }
+
+  // SPLIT VIEW
   return (
     <main className="min-h-screen w-full grid grid-cols-1 md:grid-cols-2">
-      {/* Left: Password form */}
-      <section className="flex items-center justify-center bg-black text-white p-8">
+      {/* Left: Password box */}
+      <section className="flex items-center justify-center p-8 bg-neutral-100">
         <form
           onSubmit={handlePasswordSubmit}
-          className="w-full max-w-sm flex flex-col gap-4"
+          className="w-full max-w-sm bg-white rounded-2xl shadow p-6 flex flex-col gap-4"
         >
-          <h1 className="text-xl font-bold text-center">Enter Password</h1>
+          <h1 className="text-xl font-semibold text-neutral-900 text-center">
+            Enter password
+          </h1>
 
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="w-3/4 md:w-1/2 self-center px-4 py-3 border-2 border-white bg-black text-white text-center rounded focus:outline-none focus:ring-2 focus:ring-white"
+            className="w-full rounded-lg border border-neutral-300 px-4 py-3 outline-none focus:ring-2 focus:ring-black/50"
             required
           />
 
           <button
             type="submit"
-            className="w-3/4 md:w-1/2 self-center py-3 bg-white text-black font-semibold rounded hover:bg-black hover:text-white hover:border hover:border-white transition"
+            className="w-full rounded-lg bg-black text-white py-3 hover:opacity-90 transition"
           >
             Submit
           </button>
 
-          <p className="text-xs text-neutral-300 text-center">
-            Use the password you received to review your page.
+          {/* Optional helper text / status */}
+          <p className="text-xs text-neutral-500 text-center">
+            Use the password given
           </p>
         </form>
       </section>
 
-      {/* Right: Contact button */}
-      <section className="flex items-center justify-center bg-white text-black p-8">
-        <div className="w-full max-w-sm flex flex-col items-center gap-4">
-          <h2 className="text-lg font-semibold text-center">
-            Need to reach us?
+      {/* Right: Button into contact page */}
+      <section className="flex items-center justify-center p-8 bg-white">
+        <div className="w-full max-w-sm bg-neutral-100 rounded-2xl shadow p-6 flex flex-col items-center gap-4">
+          <h2 className="text-lg font-medium text-neutral-900 text-center">
+            Lock in w us
           </h2>
 
           <Link
             href="/contact"
-            className="w-full py-3 bg-black text-white text-center rounded hover:opacity-90 transition"
+            className="w-full text-center rounded-lg bg-black text-white py-3 hover:opacity-90 transition"
           >
-            Go to Contact Page
+            Contact Page
           </Link>
 
           <p className="text-xs text-neutral-500 text-center">
-            This takes you to the contact form.
+            This will take you to the contact form.
           </p>
         </div>
       </section>

@@ -61,11 +61,10 @@ export default function ClientLayout({ children }) {
             uncoverScreen();
           },
         });
-      }, 1000); // Show "Welcome" for 1 second
-    }, 500); // Initial delay
+      }, 1000);
+    }, 500);
   }, []);
 
-  // —— ROUTE-CHANGE GRID COVERING —— //
   // Intercept same-site links and animate cover → navigation
   useEffect(() => {
     const onClick = async (e) => {
@@ -87,6 +86,12 @@ export default function ClientLayout({ children }) {
     return () => document.removeEventListener("click", onClick);
   }, [router, pathname]);
 
+  // Uncover the screen on navigation
+  useEffect(() => {
+    if (firstLoad.current) return; // Don't uncover on initial load, that's handled separately
+    uncoverScreen();
+  }, [pathname]);
+
   return (
     <>
       {/* One-time spinner overlay */}
@@ -97,7 +102,10 @@ export default function ClientLayout({ children }) {
       >
         <span className="loader">{loaderText}</span>
       </div>
+
       {children}
+
+      {/* Pixel grid */}
       <div className="load-grid">
         {Array.from({ length: 12 * 8 }).map((_, i) => (
           <div key={i} className="load-grid-item" />
