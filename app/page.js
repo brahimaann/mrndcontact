@@ -18,7 +18,7 @@ const handlePasswordSubmit = async (e) => {
     const res = await fetch("/api/poi-login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password: raw }),
+      body: JSON.stringify({ password }),
     });
     if (!res.ok) {
       alert("Invalid password. Please try again.");
@@ -26,7 +26,7 @@ const handlePasswordSubmit = async (e) => {
     }
     const { slug } = await res.json();
     router.push(`/poi/${encodeURIComponent(slug)}`);
- };
+};
 
   if (phase === "loader") {
     return (
