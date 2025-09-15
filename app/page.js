@@ -14,11 +14,11 @@ export default function Home() {
 
 const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-    const raw = password.trim();
-    const res = await fetch("/api/poi-login", {
+    const pwd = password.trim();
+    const res = await fetch("/api/poi-login/route", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ password : pwd }),
     });
     if (!res.ok) {
       alert("Invalid password. Please try again.");
