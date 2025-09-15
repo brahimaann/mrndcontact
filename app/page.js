@@ -15,7 +15,7 @@ export default function Home() {
 const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     const pwd = password.trim();
-    const res = await fetch("/api/poi-login/route", {
+    const res = await fetch("/api/poi-login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password : pwd }),
