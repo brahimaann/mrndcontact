@@ -1,8 +1,6 @@
-import { POI_INDEX } from "../../poi_data"; // adjust path if needed
-import { verifyToken } from "../../../../lib/poiAuth"; // ../../../.. from here
+import { POI_INDEX } from "../../poi_data";
 
-
-export const runtime = "edge"; // OK on Edge
+export const runtime = "edge";
 
 function readCookieStr(req, name) {
   const all = req.headers.get("cookie") || "";
@@ -15,11 +13,11 @@ function readCookieStr(req, name) {
 
 export async function POST(req, ctx) {
   try {
-    const { slug } = ctx.params;   // no need for await here
-    const token = readCookieStr(req, "poi_auth");
-    const data = await verifyToken(token); // ✅ await
+    const { slug } = ctx.params;
 
-    if (!data || data.slug !== slug) {
+    // ✅ Simple check: cookie must match the page slug
+    const cookieSlug = readCookieStr(req, "poi_slug");
+    if (!cookieSlug || cookieSlug !== slug) {
       return new Response(JSON.stringify({ ok: false, error: "unauthorized" }), {
         status: 401,
         headers: { "Content-Type": "application/json" },

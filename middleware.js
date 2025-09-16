@@ -1,17 +1,22 @@
-// middleware.js
 import { NextResponse } from "next/server";
-import { verifyToken } from "./lib/poiAuth";
 
-export async function middleware(req) {
+export function middleware(req) {
+  // Only guard /poi/*
   if (!req.nextUrl.pathname.startsWith("/poi")) return NextResponse.next();
-  const token = req.cookies.get("poi_auth")?.value || "";
-  const data = await verifyToken(token);
-  if (!data) {
-    const url = new URL("/", req.url);
-    url.searchParams.set("unauthorized", "1");
-    return NextResponse.redirect(url);
+
+  // Path like /poi/<slug>/...
+  const [, , pathSlug = ""] = req.nextUrl.pathname.split("/");
+  const cookieSlug = req.cookies.get("poi_slug")?.value || "";
+
+  // Allow only if cookie matches the slug in the URL
+  if (cookieSlug && cookieSlug === pathSlug) {
+    return NextResponse.next();
   }
-  return NextResponse.next();
+
+  // Otherwise bounce to home with a flag
+  const url = new URL("/", req.url);
+  url.searchParams.set("unauthorized", "1");
+  return NextResponse.redirect(url);
 }
 
 export const config = { matcher: ["/poi/:path*"] };
