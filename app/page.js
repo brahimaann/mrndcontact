@@ -59,10 +59,11 @@ export default function Home() {
   // Initial “Enter” screen
   if (phase === "loader") {
     return (
-      <main className="min-h-screen w-full flex items-center justify-center bg-black text-white">
+      <main className="min-h-screen w-full flex flex-col items-center justify-center bg-black text-white">
+        <img src="/logo.png" alt="MRND Logo" className="max-w-[300px] max-h-[300px]" />
         <button
           onClick={handleEnter}
-          className="rounded-2xl px-8 py-4 border border-white/20 hover:border-white transition"
+          className="mt-8 rounded-2xl px-8 py-4 border border-white/20 hover:border-white transition"
         >
           Enter
         </button>
@@ -100,9 +101,9 @@ export default function Home() {
       <section className="flex items-center justify-center p-8 bg-neutral-100">
         <form
           onSubmit={handlePasswordSubmit}
-          className="w-full max-w-sm bg-white rounded-2xl shadow p-6 flex flex-col gap-4"
+          className="w-3/4 md:w-full bg-white rounded-2xl shadow p-6 flex flex-col gap-4"
         >
-          <h1 className="text-xl font-semibold text-neutral-900 text-center">
+          <h1 className="text-l font-semibold text-neutral-900 text-center">
             Enter password
           </h1>
 
