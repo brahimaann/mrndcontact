@@ -15,7 +15,6 @@ export async function POST(req, ctx) {
   try {
     const { slug } = ctx.params;
 
-    // ✅ Simple check: cookie must match the page slug
     const cookieSlug = readCookieStr(req, "poi_slug");
     if (!cookieSlug || cookieSlug !== slug) {
       return new Response(JSON.stringify({ ok: false, error: "unauthorized" }), {
@@ -24,14 +23,29 @@ export async function POST(req, ctx) {
       });
     }
 
-    const { suggestion = "", extra = "" } = await req.json().catch(() => ({}));
+    const { suggestion = "", extra = "", userId = "", timestamp = "" } =
+      await req.json().catch(() => ({}));
+
     const poi = POI_INDEX[slug] || {};
-    const scriptURL = process.env.APPS_SCRIPT_URL;
+
+    // ✅ Works on Vercel/Node *and* Netlify/Deno Edge:
+    const scriptURL =
+      (typeof process !== "undefined" && process.env && process.env.APPS_SCRIPT_URL) ||
+      (typeof Deno !== "undefined" && Deno.env && Deno.env.get && Deno.env.get("APPS_SCRIPT_URL"));
+
+    if (!scriptURL) {
+      return new Response(
+        JSON.stringify({ ok: false, error: "Missing APPS_SCRIPT_URL for Edge runtime" }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
 
     const form = new URLSearchParams();
     form.set("slug", slug);
     form.set("name", poi.name || "");
     form.set("suggestion", suggestion);
+    form.set("userId", userId);
+    form.set("timestamp", timestamp);
     form.set("referrer", req.headers.get("referer") || "");
     form.set("userAgent", req.headers.get("user-agent") || "");
     form.set("ip", req.headers.get("x-forwarded-for") || "");
@@ -43,10 +57,18 @@ export async function POST(req, ctx) {
       body: form.toString(),
     });
 
-    if (!upstream.ok) throw new Error(await upstream.text());
-    return Response.json({ ok: true });
+    if (!upstream.ok) {
+      const text = await upstream.text();
+      return new Response(JSON.stringify({ ok: false, error: text }), {
+        status: upstream.status || 502,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    return new Response(JSON.stringify({ ok: true }), {
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (err) {
-    console.error(err);
     return new Response(JSON.stringify({ ok: false, error: String(err) }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
