@@ -285,3 +285,48 @@ button:hover {
 .pulsing-dots span:nth-child(3) {
   animation-delay: 1s;
 }
+
+.hacker{
+  background:var(--mono-bg) !important;
+  color:var(--mono-fg) !important;
+  font-family:'Dogica', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+  text-shadow:none;
+}
+.hacker a{ color:var(--mono-fg) !important; text-decoration:underline; }
+
+.hacker .card{
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--mono-line);
+  border-radius:12px;
+  padding:16px;
+  box-shadow:0 0 10px rgba(255,255,255,.08);
+}
+.hacker .muted{ color:var(--mono-fg-dim) !important; }
+
+.hacker .scanlines{
+  position:absolute; inset:0; pointer-events:none; mix-blend-mode:overlay;
+  background:repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,.035),
+    rgba(255,255,255,.035) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* Enforce mono even if Tailwind utilities add colors */
+.hacker :where([class*="text-"]){ color:var(--mono-fg) !important; }
+.hacker :where([class*="bg-"]){ background-color:transparent !important; }
+.hacker :where([class*="border-"]){ border-color:var(--mono-fg) !important; }
+
+/* Inputs & buttons inside hacker sections */
+.hacker :is(input, textarea, select, button){
+  background-color:var(--mono-bg) !important;
+  color:var(--mono-fg) !important;
+  border-color:var(--mono-fg) !important;
+}
+
+/* Make media monochrome; opt out with .no-mono */
+.hacker :is(img, video, svg):not(.no-mono){
+  filter:grayscale(100%) contrast(1.05);
+}

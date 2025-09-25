@@ -1,13 +1,12 @@
-// app/layout.js
+// app/layout.js (Server Component)
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
+import Providers from "./providers";
 
 export const metadata = {
   title: "MRND",
   description: "Let's connect and collaborate!",
-  icons: {
-    icon: "/favicon.ico",
-  },
+  icons: { icon: "/favicon.ico" },
 };
 
 export default function RootLayout({ children }) {
@@ -20,7 +19,10 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body suppressHydrationWarning>
-        <ClientLayout>{children}</ClientLayout>
+        <Providers>
+          {/* If ClientLayout is a client component, keep it here; otherwise render {children} directly */}
+          <ClientLayout>{children}</ClientLayout>
+        </Providers>
       </body>
     </html>
   );

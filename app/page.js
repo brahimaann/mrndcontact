@@ -1,180 +1,146 @@
+// app/page.js
 "use client";
 
-import { useRef, useState } from "react";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import ButtonNav from "./components/ButtonNav";
+import CalanderScreen from "./components/CalanderScreen";
 
-export default function Home() {
-  const [phase, setPhase] = useState("loader"); // 'loader' -> 'split' -> 'loading'
-  const [password, setPassword] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [shake, setShake] = useState(false);
+export default function HomePage() {
+  const [showCitiesModal, setShowCitiesModal] = useState(false);
+
+  return (
+    <main className="min-h-screen w-full bg-black text-white">
+      {/* Top bar */}
+       <br></br>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 pt-2">
+        <div className="flex items-center justify-center gap-3">
+          {/* Cities Project button opens full-screen password overlay */}
+          <button
+            onClick={() => setShowCitiesModal(true)}
+            className="px-4 py-2 rounded-lg border border-white/20 bg-black hover:bg-black hover:text-white hacker"
+          >
+            Cities 
+          </button>
+
+          {/* Other nav buttons with per-button loader */}
+          <ButtonNav href="/projects"  className="px-4 py-2 rounded-lg border border-white/20 bg-black hover:bg-black hover:text-white hacker">Projects</ButtonNav>
+          <ButtonNav href="/portfolio" className="px-4 py-2 rounded-lg border border-white/20 bg-black hover:bg-black hover:text-white hacker">Portfolio</ButtonNav>
+          <ButtonNav href="/contact"   className="px-4 py-2 rounded-lg border border-white/20 bg-black hover:bg-black hover:text-white hacker">Contact</ButtonNav>
+        </div>
+      </section>
+
+      {/* Calendar under the menu */}
+      <br></br>
+      <br></br>
+     <CalanderScreen />
+
+      {showCitiesModal && (
+        <CitiesPasswordOverlay onClose={() => setShowCitiesModal(false)} />
+      )}
+    </main>
+  );
+}
+
+function CitiesPasswordOverlay({ onClose }) {
   const router = useRouter();
-  const inputRef = useRef(null);
+  const [pwd, setPwd] = useState("");
+  const [err, setErr] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleEnter = () => setPhase("split");
+  // Close on ESC
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
 
-  const handlePasswordSubmit = async (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     if (submitting) return;
-
-    setErrorMsg("");
+    setErr("");
     setSubmitting(true);
-
     try {
-      const pwd = password.trim();
       const res = await fetch("/api/poi-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: pwd }),
+        body: JSON.stringify({ password: pwd.trim() }),
       });
-
       if (!res.ok) {
-        // Incorrect password UX: show message, shake, clear, refocus
-        setErrorMsg("Incorrect password");
-        setShake(true);
-        setPassword("");
+        setErr("Incorrect password");
         setSubmitting(false);
-        // finish the shake after 500ms
-        setTimeout(() => setShake(false), 500);
-        // put focus back for fast re-try
-        requestAnimationFrame(() => inputRef.current?.focus());
         return;
       }
-
-      const { slug } = await res.json(); // backend returns slug on success
-      // Loading transition before redirect
-      setPhase("loading");
-      // Give the animation a brief moment to show
-      setTimeout(() => {
-        router.push(`/poi/${encodeURIComponent(slug)}`);
-      }, 500);
+      const { slug } = await res.json();
+      router.push(`/poi/${encodeURIComponent(slug)}`);
     } catch {
-      setErrorMsg("Something went wrong. Try again.");
+      setErr("Something went wrong. Try again.");
       setSubmitting(false);
     }
   };
 
-  // Initial “Enter” screen
-  if (phase === "loader") {
-    return (
-      <main className="min-h-screen w-full flex flex-col items-center justify-center bg-black text-white">
-        <img src="/logo.png" alt="MRND Logo" className="max-w-[300px] max-h-[300px]" />
-        <button
-          onClick={handleEnter}
-          className="mt-8 rounded-2xl px-8 py-4 border border-white/20 hover:border-white transition"
-        >
-          Enter
-        </button>
-      </main>
-    );
-  }
-
-  // Fullscreen loading transition after successful password
-  if (phase === "loading") {
-    return (
-      <main className="min-h-screen w-full flex items-center justify-center bg-black text-white">
-        <div className="flex items-center gap-3 text-lg">
-          <div className="h-4 w-4 rounded-full bg-white/90 animate-ping" />
-          <span>Loading your page…</span>
-        </div>
-
-        {/* extra polish: subtle fade-in */}
-        <style jsx>{`
-          main {
-            animation: fadeIn 240ms ease-out both;
-          }
-          @keyframes fadeIn {
-            from { opacity: 0 }
-            to   { opacity: 1 }
-          }
-        `}</style>
-      </main>
-    );
-  }
-
-  // Split view (password + contact link)
   return (
-    <main className="min-h-screen w-full grid grid-cols-1 md:grid-cols-2">
-      {/* Left: Password box */}
-      <section className="flex items-center justify-center p-8 bg-neutral-100">
+    // Full-screen opaque cover
+    <div
+      className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-sm"
+      onClick={onClose}
+      aria-hidden="true"
+    >
+      {/* Top-right close X */}
+      <button
+        onClick={onClose}
+        aria-label="Close"
+        className="absolute top-4 right-4 h-10 w-10 rounded-full border border-white/30 text-white
+                   hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30"
+      >
+        ×
+      </button>
+
+      {/* Centered dialog */}
+      <div
+        role="dialog"
+        aria-modal="true"
+        className="min-h-screen grid place-items-center px-4"
+        onClick={(e) => e.stopPropagation()} // keep clicks inside from closing
+      >
         <form
-          onSubmit={handlePasswordSubmit}
-          className="w-3/4 md:w-full bg-white rounded-2xl shadow p-6 flex flex-col gap-4"
+          onSubmit={submit}
+          className="w-full max-w-md bg-black border border-white/15 rounded-xl p-5 space-y-4 shadow-2xl"
         >
-          <h1 className="text-l font-semibold text-neutral-900 text-center">
-            Enter password
-          </h1>
+          <h3 className="text-lg font-semibold">Enter Cities Project Password</h3>
 
           <input
-            ref={inputRef}
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={pwd}
+            onChange={(e) => setPwd(e.target.value)}
             placeholder="Password"
-            className={`w-full rounded-lg border px-4 py-3 outline-none focus:ring-2 transition ${
-              errorMsg
-                ? "border-red-400 focus:ring-red-300"
-                : "border-neutral-300 focus:ring-black/50"
-            } ${shake ? "animate-shake" : ""}`}
+            className="w-full bg-black border border-white/20 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-white/20"
             required
             disabled={submitting}
+            autoFocus
           />
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full rounded-lg bg-black text-white py-3 hover:opacity-90 transition disabled:opacity-60"
-          >
-            {submitting ? "Checking…" : "Submit"}
-          </button>
+          {err && <p className="text-red-400 text-sm">{err}</p>}
 
-          {/* Status / helper */}
-          <p
-            aria-live="polite"
-            className={`text-center text-sm min-h-[1.25rem] ${
-              errorMsg ? "text-red-500" : "text-neutral-500"
-            }`}
-          >
-            {errorMsg || "Use the password provided to you."}
-          </p>
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 border border-white/20 rounded"
+              disabled={submitting}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={submitting}
+              className={`px-4 py-2 bg-white text-black rounded ${submitting ? "opacity-75 cursor-wait" : ""}`}
+            >
+              {submitting ? "Checking…" : "Submit"}
+            </button>
+          </div>
         </form>
-      </section>
-
-      {/* Right: Contact shortcut */}
-      <section className="flex items-center justify-center p-8 bg-white">
-        <div className="w-full max-w-sm bg-neutral-100 rounded-2xl shadow p-6 flex flex-col items-center gap-4">
-          <h2 className="text-lg font-medium text-neutral-900 text-center">
-            Lock in w us
-          </h2>
-
-          <Link
-            href="/contact"
-            className="w-full text-center rounded-lg bg-black text-white py-3 hover:opacity-90 transition"
-          >
-            Contact Page
-          </Link>
-
-          <p className="text-xs text-neutral-500 text-center">
-            This will take you to the contact form.
-          </p>
-        </div>
-      </section>
-
-      {/* Tiny CSS for the shake animation */}
-      <style jsx global>{`
-        @keyframes shakeX {
-          0%, 100% { transform: translateX(0) }
-          20% { transform: translateX(-6px) }
-          40% { transform: translateX(6px) }
-          60% { transform: translateX(-4px) }
-          80% { transform: translateX(4px) }
-        }
-        .animate-shake {
-          animation: shakeX 500ms ease;
-        }
-      `}</style>
-    </main>
+      </div>
+    </div>
   );
 }
