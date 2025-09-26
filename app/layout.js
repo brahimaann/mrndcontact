@@ -2,11 +2,11 @@
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
 import Providers from "./providers";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata = {
   title: "MRND",
-  description: "Let's connect and collaborate!",
-  icons: { icon: "/favicon.ico" },
+  description: "Culture lives here",
 };
 
 export default function RootLayout({ children }) {
@@ -19,10 +19,12 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body suppressHydrationWarning>
-        <Providers>
-          {/* If ClientLayout is a client component, keep it here; otherwise render {children} directly */}
-          <ClientLayout>{children}</ClientLayout>
-        </Providers>
+        <ClerkProvider>
+          <Providers>
+            {/* If ClientLayout is a client component, keep it here; otherwise render {children} directly */}
+            <ClientLayout>{children}</ClientLayout>
+          </Providers>
+        </ClerkProvider>
       </body>
     </html>
   );

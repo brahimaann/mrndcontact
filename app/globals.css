@@ -79,7 +79,7 @@ input[type="checkbox"] {
 body {
   background-color: #ffffff;
   color: #000000;
-  font-family: 'Dogica', cursive;
+  font-family: 'Dogica' ;
 }
 
 .container {

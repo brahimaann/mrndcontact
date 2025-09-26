@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.32.2",
     "bcryptjs": "^3.0.2",
-    "convex": "^1.27.1",
+    "convex": "^1.27.3",
+    "convex-helpers": "^0.1.104",
     "gsap": "^3.13.0",
     "moment": "^2.30.1",
     "next": "15.3.4",
