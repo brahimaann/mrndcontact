@@ -7,6 +7,37 @@
   visibility: hidden;
   display: none;
 }
+:root {
+  --radius-xl: 1rem;
+}
+
+/* Section rhythm utility (pairs with max-w container) */
+.section {
+  padding-top: 2.5rem; /* mobile */
+  padding-bottom: 2.5rem;
+}
+@media (min-width: 1024px) {
+  .section {
+    padding-top: 4rem;  /* desktop */
+    padding-bottom: 4rem;
+  }
+}
+/* Guard for the floating mini calendar */
+.mini-hud {
+  position: fixed !important;
+  top: 1rem !important;   /* ≈ top-20 */
+  right: 1rem !important; /* ≈ right-4 */
+  left: auto !important;
+}
+
+
+/* Optional multi-line clamp if tailwind plugin not enabled */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 input[type="checkbox"] {
   accent-color: black;

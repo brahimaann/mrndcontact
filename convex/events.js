@@ -95,6 +95,25 @@ export const updateEvent = mutation({
   },
 });
 
+export const inRange = query({
+  args: { start: v.number(), end: v.number() },
+  handler: async (ctx, { start, end }) => {
+    const rows = await ctx.db
+      .query("events")
+      .withIndex("by_time", q => q.gte("start", start))
+      .filter(q => q.lt(q.field("start"), end))
+      .collect();
+
+    const byDay = {};
+    for (const ev of rows) {
+      const d = new Date(ev.start);
+      const key = new Date(d.getFullYear(), d.getMonth(), d.getDate()).toDateString();
+      (byDay[key] ??= []).push(ev);
+    }
+    return byDay;
+  },
+});
+
 /** (Optional) Delete an event (also code-gated) */
 export const deleteEvent = mutation({
   args: { code: v.string(), id: v.id("events") },

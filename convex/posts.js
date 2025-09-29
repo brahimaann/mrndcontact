@@ -48,6 +48,37 @@ export const getPostBySlug = query({
   },
 });
 
+/**
+ * Return the latest N posts by createdAt (defaults to 3).
+ * Falls back to _creationTime if createdAt missing.
+ */
+export const latest = query({
+  args: { limit: v.optional(v.number()) },
+  handler: async (ctx, { limit = 3 }) => {
+    // Prefer the explicit createdAt index
+    const found = await ctx.db
+      .query("posts")
+      .withIndex("by_createdAt", q => q) // already sorted asc by key; we order client-side
+      .collect();
+
+    const ordered = found
+      .map(p => ({ ...p, _sort: p.createdAt ?? p._creationTime }))
+      .sort((a, b) => b._sort - a._sort)
+      .slice(0, limit);
+
+    // If no index results (edge case), fallback to raw query by _creationTime
+    if (ordered.length) return ordered;
+
+    const fallback = await ctx.db
+      .query("posts")
+      .collect();
+
+    return fallback
+      .sort((a, b) => b._creationTime - a._creationTime)
+      .slice(0, limit);
+  },
+});
+
 /** Replies (oldest → newest) */
 export const listReplies = query({
   args: { postId: v.id("posts"), limit: v.optional(v.number()) },

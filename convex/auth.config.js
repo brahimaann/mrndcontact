@@ -1,7 +1,9 @@
-// convex/auth.config.js
-import { convexAuth } from "convex-helpers/server/auth";
-import { clerk } from "convex-helpers/server/clerk";
-
-export default convexAuth({
-  providers: [clerk()],
-});
+export default {
+  providers: [
+    {
+      // Use the Issuer URL from your Clerk "Convex" JWT template
+      domain: process.env.CLERK_FRONTEND_API_URL,
+      applicationID: "convex",
+    },
+  ],
+};
