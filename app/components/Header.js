@@ -1,73 +1,63 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import Link from "next/link";
 
-/** Sticky header with always-accessible nav buttons */
+/** Fixed left vertical nav */
 export default function Header() {
   return (
-    <header
+    <aside
       className="
-        fixed top-0 left-0 right-0
-        z-[90]                /* above floating mini-map & overlay */
-        border-b border-white/10
-        bg-black/60 backdrop-blur-lg
+        fixed inset-y-0 left-0
+        w-40 lg:w-48
+        border-r border-white/10
+        bg-black/50 backdrop-blur
+        px-4 lg:px-6 py-6
+        flex flex-col
       "
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-3">
-        <div className="flex items-center justify-between">
-          <a href="/" className="text-base font-semibold tracking-wide">MRND</a>
-          <NavBar />
-        </div>
-      </div>
-    </header>
+      <Link
+        href="/"
+        className="text-base font-semibold tracking-wide mb-10 lg:mb-14"
+      >
+        MRND
+      </Link>
+
+     <nav className="fixed left-0 top-0 h-full w-24 flex flex-col items-center justify-center border-r border-black/20">
+  {["Cities", "Projects", "Portfolio", "Join", "Map"].map(link => (
+    <a key={link} href={`#${link.toLowerCase()}`} className="rotate-[-90deg] text-sm tracking-widest hover:text-green-400 transition-colors">
+      {link}
+    </a>
+  ))}
+</nav>
+    </aside>
   );
 }
 
-function NavBar() {
-  return (
-    <div className="grid grid-cols-4 gap-2 max-w-[560px]">
-      <NavButton href="#cities">Cities</NavButton>
-      <NavButton href="/projects">Projects</NavButton>
-      <NavButton href="/portfolio">Portfolio</NavButton>
-      <NavButton href="#join">Join</NavButton>
-    </div>
-  );
-}
-
-/** Button with brief loading state then navigate */
-function NavButton({ href, children }) {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-
-  const go = (e) => {
-    e.preventDefault();
-    if (loading) return;
-    setLoading(true);
-    setTimeout(() => {
-      if (href.startsWith("#")) {
+function NavLink({ href, children }) {
+  const isHash = href.startsWith("#");
+  return isHash ? (
+    <a
+      href={href}
+      className="text-lg lg:text-xl leading-none hover:opacity-80 transition-opacity"
+      onClick={(e) => {
+        // smooth scroll for hash links
         const id = href.slice(1);
-        window.location.hash = id;
-        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-        setLoading(false);
-      } else {
-        router.push(href);
-      }
-    }, 350);
-  };
-
-  return (
-    <button
-      onClick={go}
-      disabled={loading}
-      className="
-        w-full px-4 py-2 text-center text-sm rounded-md border
-        bg-white text-black border-black
-        hover:bg-black hover:text-white transition-colors
-        disabled:opacity-60
-      "
+        const el = document.getElementById(id);
+        if (el) {
+          e.preventDefault();
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          history.replaceState(null, "", href);
+        }
+      }}
     >
-      {loading ? "Loading…" : children}
-    </button>
+      {children}
+    </a>
+  ) : (
+    <Link
+      href={href}
+      className="text-lg lg:text-xl leading-none hover:opacity-80 transition-opacity"
+    >
+      {children}
+    </Link>
   );
 }

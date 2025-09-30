@@ -8,7 +8,7 @@ export default function ProjectsList() {
   const posts = useQuery(api.posts.listPosts, { limit: 100 }) ?? [];
 
   return (
-    <main className="hacker relative max-w-5xl mx-auto p-6 space-y-6">
+    <main className="relative max-w-5xl mx-auto p-6 space-y-6">
       <div className="scanlines" />
       <Link href="/" className="underline">{'< Back'}</Link>
       <header className="flex items-center justify-between">

@@ -30,7 +30,7 @@ export default function NewProjectPage() {
   }
 
   return (
-    <main className="hacker relative max-w-3xl mx-auto p-6">
+    <main className="relative max-w-3xl mx-auto p-6">
       <div className="scanlines" />
       <h1 className="text-2xl font-bold">New Project</h1>
       <p className="muted text-sm mt-1">Anyone with the secret code can post.</p>

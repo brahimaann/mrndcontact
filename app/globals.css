@@ -2,103 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-/* From Uiverse.io by PriyanshuGupta28 */
-.checkbox-wrapper input[type="checkbox"] {
-  visibility: hidden;
-  display: none;
-}
+
+.calendar-panel * { font-family: 'Dogica', ui-monospace, monospace !important; }
+/* ========================
+   Root Variables & Fonts
+======================== */
 :root {
   --radius-xl: 1rem;
-}
 
-/* Section rhythm utility (pairs with max-w container) */
-.section {
-  padding-top: 2.5rem; /* mobile */
-  padding-bottom: 2.5rem;
+  --mono-bg:#fff;
+  --mono-fg:#000;
+  --mono-fg-dim:#cfcfcf;
+  --mono-line:#2a2a2a;
 }
-@media (min-width: 1024px) {
-  .section {
-    padding-top: 4rem;  /* desktop */
-    padding-bottom: 4rem;
-  }
-}
-/* Guard for the floating mini calendar */
-.mini-hud {
-  position: fixed !important;
-  top: 1rem !important;   /* ≈ top-20 */
-  right: 1rem !important; /* ≈ right-4 */
-  left: auto !important;
-}
-
-
-/* Optional multi-line clamp if tailwind plugin not enabled */
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-input[type="checkbox"] {
-  accent-color: black;
-}
-.checkbox-wrapper *,
-.checkbox-wrapper ::after,
-.checkbox-wrapper ::before {
-  box-sizing: border-box;
-  user-select: none;
-}
-
-.checkbox-wrapper {
-  position: relative;
-  display: block;
-  overflow: hidden;
-}
-
-.checkbox-wrapper .label {
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  width: 100%;
-}
-
-.checkbox-wrapper .check {
-  width: 50px;
-  height: 50px;
-  position: absolute;
-  opacity: 0;
-}
-
-.checkbox-wrapper .label svg {
-  vertical-align: middle;
-}
-
-.checkbox-wrapper .path1 {
-  stroke: black;
-  stroke-dasharray: 400;
-  stroke-dashoffset: 400;
-  transition: .5s stroke-dashoffset;
-  opacity: 0;
-}
-
-.checkbox-wrapper .check:checked + label svg g path {
-  stroke-dashoffset: 0;
-  opacity: 1;
-}
-
-/* New Roles Grid Layout */
-.roles-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
-}
-
-@media (max-width: 768px) {
-  .roles-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 
 @font-face {
   font-family: 'Dogica';
@@ -108,256 +24,183 @@ input[type="checkbox"] {
 }
 
 body {
-  background-color: #ffffff;
-  color: #000000;
-  font-family: 'Dogica' ;
-}
-
-.container {
-  border: 4px solid #fff;
-  box-shadow: 0 0 10px #fff;
-}
-
-input, textarea, select, datalist, option {
-  background-color: #000;
-  border: 2px solid #fff;
-  color: #fff;
-  padding: 10px;
-  font-family: 'Dogica', cursive;
-  caret-color: #fff;
-  text-align: center;
-}
-
-input:focus, textarea:focus {
-  outline: none;
-  box-shadow: 0 0 10px #fff;
-}
-
-button {
   background-color: #fff;
-  color: #000;
-  border: 2px solid #fff;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-family: 'Dogica', cursive;
+  color: var(--mono-fg);
+  font-family: 'Dogica', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-button:hover {
-  background-color: #000;
-  color: #fff;
+/* ========================
+   Global Utilities
+======================== */
+.section {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
 }
-
-.er-box {
-  user-select: none;
-}
-
-/* —————————————————————————  
-   Pixel-grid transition styles
-————————————————————————— */
-.load-grid {
-  position: fixed;
-  inset: 0;
-  display: none;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(8, 1fr);
-  gap: 0;
-  z-index: 9999;
-}
-
-/* ADD opacity: 0 here so each run always begins transparent */
-.load-grid-item {
-  width: 100%;
-  height: 100%;
-  background-color: #000;
-  opacity: 0;
-}
-
-@keyframes blink {
-  50% {
-    border-color: transparent;
+@media (min-width: 1024px) {
+  .section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
   }
 }
 
-.blinking-cursor {
-  animation: blink 1s step-start infinite;
-  border-right: 2px solid white;
-  width: 2px;
-  height: 1.5em; /* Adjusted for better visual */
-  display: inline-block; /* Ensures cursor is next to text */
-  vertical-align: middle; /* Aligns cursor with text */
+/* Multi-line clamp (fallback if plugin disabled) */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-/* Spinner overlay (one-time on first load) */
-.spinner-overlay {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #000;
-  z-index: 10000;
+/* Prevent selection on some UI elements */
+.er-box { user-select: none; }
+
+/* ========================
+   HUD / CRT Augments
+======================== */
+.crt-wrap { position: relative; }
+.crt-wrap::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,.03), rgba(0,0,0,.03) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: overlay; pointer-events: none;
+}
+.crt-wrap::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 20%, rgba(0,0,0,.10), transparent 60%);
+  pointer-events: none;
 }
 
-.loader {
-  font-size: 10px;
-  width: 1em;
-  height: 1em;
-  border-radius: 50%;
-  position: relative;
-  text-indent: -9999em;
-  animation: mulShdSpin 1.1s infinite ease;
-  transform: translateZ(0);
+/* Poster / key art block */
+.hud-poster{
+  aspect-ratio: 4/5;
+  border-radius:16px;
+  border:1px solid rgba(0,0,0,.25);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(0,0,0,.16), transparent 55%),
+    linear-gradient(135deg, rgba(0,0,0,.10), rgba(0,0,0,.03));
+  box-shadow: 0 0 24px rgba(0,0,0,.12) inset,
+              0 0 18px rgba(0,0,0,.08);
 }
 
-@keyframes mulShdSpin {
-  0%, 100% {
-    box-shadow:
-      0em -2.6em 0em 0em #ffffff,
-      1.8em -1.8em 0 0em rgba(255,255,255, 0.2),
-      2.5em 0em 0 0em rgba(255,255,255, 0.2),
-      1.75em 1.75em 0 0em rgba(255,255,255, 0.2),
-      0em 2.5em 0 0em rgba(255,255,255, 0.2),
-      -1.8em 1.8em 0 0em rgba(255,255,255, 0.2),
-      -2.6em 0em 0 0em rgba(255,255,255, 0.5),
-      -1.8em -1.8em 0 0em rgba(255,255,255, 0.7);
-  }
-  12.5% {
-    box-shadow:
-      0em -2.6em 0em 0em rgba(255,255,255, 0.7),
-      1.8em -1.8em 0 0em #ffffff,
-      2.5em 0em 0 0em rgba(255,255,255, 0.2),
-      1.75em 1.75em 0 0em rgba(255,255,255, 0.2),
-      0em 2.5em 0 0em rgba(255,255,255, 0.2),
-      -1.8em 1.8em 0 0em rgba(255,255,255, 0.2),
-      -2.6em 0em 0 0em rgba(255,255,255, 0.2),
-      -1.8em -1.8em 0 0em rgba(255,255,255, 0.5);
-  }
-  25% {
-    box-shadow:
-      0em -2.6em 0em 0em rgba(255,255,255, 0.5),
-      1.8em -1.8em 0 0em rgba(255,255,255, 0.7),
-      2.5em 0em 0 0em #ffffff,
-      1.75em 1.75em 0 0em rgba(255,255,255, 0.2),
-      0em 2.5em 0 0em rgba(255,255,255, 0.2),
-      -1.8em 1.8em 0 0em rgba(255,255,255, 0.2),
-      -2.6em 0em 0 0em rgba(255,255,255, 0.2),
-      -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
-  }
-  37.5% {
-    box-shadow:
-      0em -2.6em 0em 0em rgba(255,255,255, 0.2),
-      1.8em -1.8em 0 0em rgba(255,255,255, 0.5),
-      2.5em 0em 0 0em rgba(255,255,255, 0.7),
-      1.75em 1.75em 0 0em #ffffff,
-      0em 2.5em 0 0em rgba(255,255,255, 0.2),
-      -1.8em 1.8em 0 0em rgba(255,255,255, 0.2),
-      -2.6em 0em 0 0em rgba(255,255,255, 0.2),
-      -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
-  }
-  50% {
-    box-shadow:
-      0em -2.6em 0em 0em rgba(255,255,255, 0.2),
-      1.8em -1.8em 0 0em rgba(255,255,255, 0.2),
-      2.5em 0em 0 0em rgba(255,255,255, 0.5),
-      1.75em 1.75em 0 0em rgba(255,255,255, 0.7),
-      0em 2.5em 0 0em #ffffff,
-      -1.8em 1.8em 0 0em rgba(255,255,255, 0.2),
-      -2.6em 0em 0 0em rgba(255,255,255, 0.2),
-      -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
-  }
-  62.5% {
-    box-shadow:
-      0em -2.6em 0em 0em rgba(255,255,255, 0.2),
-      1.8em -1.8em 0 0em rgba(255,255,255, 0.2),
-      2.5em 0em 0 0em rgba(255,255,255, 0.2),
-      1.75em 1.75em 0 0em rgba(255,255,255, 0.5),
-      0em 2.5em 0 0em rgba(255,255,255, 0.7),
-      -1.8em 1.8em 0 0em #ffffff,
-      -2.6em 0em 0 0em rgba(255,255,255, 0.2),
-      -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
-  }
-  75% {
-    box-shadow:
-      0em -2.6em 0em 0em rgba(255,255,255, 0.2),
-      1.8em -1.8em 0 0em rgba(255,255,255, 0.2),
-      2.5em 0em 0 0em rgba(255,255,255, 0.2),
-      1.75em 1.75em 0 0em rgba(255,255,255, 0.2),
-      0em 2.5em 0 0em rgba(255,255,255, 0.5),
-      -1.8em 1.8em 0 0em rgba(255,255,255, 0.7),
-      -2.6em 0em 0 0em #ffffff,
-      -1.8em -1.8em 0 0em rgba(255,255,255, 0.2);
-  }
-  87.5% {
-    box-shadow:
-      0em -2.6em 0em 0em rgba(255,255,255, 0.2),
-      1.8em -1.8em 0 0em rgba(255,255,255, 0.2),
-      2.5em 0em 0 0em rgba(255,255,255, 0.2),
-      1.75em 1.75em 0 0em rgba(255,255,255, 0.2),
-      0em 2.5em 0 0em rgba(255,255,255, 0.2),
-      -1.8em 1.8em 0 0em rgba(255,255,255, 0.5),
-      -2.6em 0em 0 0em rgba(255,255,255, 0.7),
-      -1.8em -1.8em 0 0em #ffffff;
-  }
+/* HUD buttons */
+.hud-btn{
+  background:transparent;
+  border:1px solid #000;
+  color:#000;
+  padding:.55rem .9rem;
+  border-radius:10px;
+  font-family:'Dogica', ui-monospace, monospace;
+  font-size:.8rem; letter-spacing:.08em; text-transform:uppercase;
+}
+.hud-btn:hover{ box-shadow:0 0 12px rgba(0,0,0,.45); }
+.hud-btn--ghost{ border-color:#000; color:#fff; background:#000; }
+
+/* HUD cards */
+.hud-card{
+  border:1px solid var(--mono-line) !important;
+  background:rgba(0,0,0,.04) !important;
+  box-shadow:0 0 14px rgba(0,0,0,.08) inset;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+/* Terminal typing effect */
+@keyframes typing { from { width: 0; } to { width: 100%; } }
+@keyframes caret { 50% { border-color: transparent; } }
+.typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid #000;
+  animation: typing 2.2s steps(30, end), caret 1s step-end infinite;
 }
 
-.pulsing-dots span {
-  animation: pulse 1.5s infinite;
+.right-rail .mini-hud {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  left: auto !important;
+  inset: auto !important;
+  transform: none !important;
+  margin: 0 !important;
 }
 
-.pulsing-dots span:nth-child(2) {
-  animation-delay: 0.5s;
+/* Radar sweep (HUD sidebar) */
+@keyframes sweep { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.radar::before {
+  content: "";
+  position: absolute; inset: -2px;
+  border-radius: 999px;
+  background: conic-gradient(from 0deg, rgba(35,255,124,.25), transparent 50%);
+  animation: sweep 4s linear infinite;
+  filter: blur(4px); opacity: .6;
 }
 
-.pulsing-dots span:nth-child(3) {
-  animation-delay: 1s;
+/* Mission feed grid */
+.mission-row{
+  display:grid; grid-template-columns:120px 1fr auto;
+  gap:.75rem; align-items:center; padding:.5rem .75rem;
+  border-bottom:1px dashed rgba(0,0,0,.18);
+}
+.mission-row .level {
+  color:#000;
+  font-family: ui-monospace, monospace;
 }
 
-.hacker{
-  background:var(--mono-bg) !important;
-  color:var(--mono-fg) !important;
-  font-family:'Dogica', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
-  text-shadow:none;
+/* ========================
+   Hacker Theme Enforcement
+======================== */
+.hacker {
+  background: var(--mono-bg) !important;
+  color: var(--mono-fg) !important;
+  font-family: 'Dogica', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+  text-shadow: none;
 }
-.hacker a{ color:var(--mono-fg) !important; text-decoration:underline; }
-
-.hacker .card{
-  background:rgba(255,255,255,.03);
-  border:1px solid var(--mono-line);
-  border-radius:12px;
-  padding:16px;
-  box-shadow:0 0 10px rgba(255,255,255,.08);
+.hacker a { color: var(--mono-fg) !important; text-decoration: underline; }
+.hacker .card {
+  background: rgba(0,0,0,.03);
+  border: 1px solid var(--mono-line);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 0 10px rgba(0,0,0,.08);
 }
-.hacker .muted{ color:var(--mono-fg-dim) !important; }
-
-.hacker .scanlines{
-  position:absolute; inset:0; pointer-events:none; mix-blend-mode:overlay;
-  background:repeating-linear-gradient(
-    0deg,
-    rgba(255,255,255,.035),
-    rgba(255,255,255,.035) 1px,
-    transparent 1px,
-    transparent 3px
-  );
+.hacker .muted { color: var(--mono-fg-dim) !important; }
+.hacker .scanlines {
+  position: absolute; inset: 0;
+  pointer-events: none; mix-blend-mode: overlay;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,.035), rgba(0,0,0,.035) 1px, transparent 1px, transparent 3px);
 }
-
-/* Enforce mono even if Tailwind utilities add colors */
-.hacker :where([class*="text-"]){ color:var(--mono-fg) !important; }
-.hacker :where([class*="bg-"]){ background-color:transparent !important; }
-.hacker :where([class*="border-"]){ border-color:var(--mono-fg) !important; }
-
-/* Inputs & buttons inside hacker sections */
-.hacker :is(input, textarea, select, button){
-  background-color:var(--mono-bg) !important;
-  color:var(--mono-fg) !important;
-  border-color:var(--mono-fg) !important;
+/* Force monochrome overrides */
+.hacker :where([class*="text-"]) { color: var(--mono-fg) !important; }
+.hacker :where([class*="bg-"]) { background-color: transparent !important; }
+.hacker :where([class*="border-"]) { border-color: var(--mono-fg) !importan;
+}
+/* Inputs/buttons inside hacker zones */
+.hacker :is(input, textarea, select, button) {
+  background-color: var(--mono-bg) !important;
+  color: var(--mono-fg) !important;
+  border-color: var(--mono-fg) !important;
+}
+/* Monochrome media (opt-out w/ .no-mono) */
+.hacker :is(img, video, svg):not(.no-mono) {
+  filter: grayscale(100%) contrast(1.05);
 }
 
-/* Make media monochrome; opt out with .no-mono */
-.hacker :is(img, video, svg):not(.no-mono){
-  filter:grayscale(100%) contrast(1.05);
+.vertical-text {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.chip{
+  display:inline-block;
+  padding:.35rem .6rem;
+  background:transparent;
+  color:#000;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  border-radius:10px;
+  line-height:1;
+}
+.chip--invert,
+.chip:hover{
+  color:#000000;
 }

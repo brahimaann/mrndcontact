@@ -23,7 +23,7 @@ export default function ProjectDetail({ params }) {
   );
 
   return (
-    <main className="hacker relative max-w-5xl mx-auto p-6">
+    <main className="relative max-w-5xl mx-auto p-6">
       <div className="scanlines" />
 
       <div className="mb-6 flex items-center justify-between">
