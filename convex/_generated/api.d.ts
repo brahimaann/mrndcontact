@@ -13,9 +13,12 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as admin from "../admin.js";
 import type * as events from "../events.js";
+import type * as identifiers from "../identifiers.js";
 import type * as media from "../media.js";
 import type * as posts from "../posts.js";
+import type * as profile from "../profile.js";
 import type * as users from "../users.js";
 
 /**
@@ -27,9 +30,12 @@ import type * as users from "../users.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  admin: typeof admin;
   events: typeof events;
+  identifiers: typeof identifiers;
   media: typeof media;
   posts: typeof posts;
+  profile: typeof profile;
   users: typeof users;
 }>;
 export declare const api: FilterApi<

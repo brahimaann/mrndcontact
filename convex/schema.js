@@ -59,4 +59,29 @@ export default defineSchema({
     visibility: v.union(v.literal("public"), v.literal("members"), v.literal("core")),
     createdAt: v.number(),
   }).index("by_owner", ["ownerUserId"]).index("by_artist", ["artistId"]),
+
+allowed_identifiers: defineTable({
+    type: v.union(v.literal("EMAIL"), v.literal("PHONE")),
+    value: v.string(),         // lowercased for email; E.164 for phone
+    allowed: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_value_type", ["value", "type"]),
+
+  user_profiles: defineTable({
+    userId: v.string(),
+    name: v.string(),
+    alias: v.optional(v.string()),
+    instagram: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_userId", ["userId"]),
+
+  // NEW: “who can use /admin”
+  admin_users: defineTable({
+    type: v.union(v.literal("EMAIL"), v.literal("PHONE")),
+    value: v.string(),         // lowercased email or E.164 phone
+    createdAt: v.number(),
+  }).index("by_value_type", ["value", "type"]),
+
 });

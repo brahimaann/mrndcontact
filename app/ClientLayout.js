@@ -1,7 +1,7 @@
 // app/ClientLayout.js
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
 
@@ -9,7 +9,6 @@ export default function ClientLayout({ children }) {
   const router = useRouter();
   const pathname = usePathname();
   const firstLoad = useRef(true);
-  const [loaderText, setLoaderText] = useState("Loading...");
 
   // Show the pixel grid full-screen
   const coverScreen = () =>
@@ -44,25 +43,8 @@ export default function ClientLayout({ children }) {
     if (!firstLoad.current) return;
     firstLoad.current = false;
 
-    // 1) Show "Welcome"
-    setTimeout(() => {
-      setLoaderText("Welcome");
-
-      // 2) Fade out "Welcome" and spinner
-      setTimeout(() => {
-        gsap.to("#spinner", {
-          opacity: 0,
-          duration: 0.5,
-          onComplete: () => {
-            const sp = document.getElementById("spinner");
-            if (sp) sp.style.display = "none";
-
-            // 3) Reveal splash
-            uncoverScreen();
-          },
-        });
-      }, 1000);
-    }, 500);
+    // Reveal splash
+    uncoverScreen();
   }, []);
 
   // Intercept same-site links and animate cover → navigation
@@ -94,15 +76,6 @@ export default function ClientLayout({ children }) {
 
   return (
     <>
-      {/* One-time spinner overlay */}
-      <div
-        id="spinner"
-        className="spinner-overlay"
-        style={{ opacity: 1, transition: "opacity 0.5s ease" }}
-      >
-        <span className="loader">{loaderText}</span>
-      </div>
-
       {children}
 
       {/* Pixel grid */}

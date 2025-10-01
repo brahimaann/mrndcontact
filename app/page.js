@@ -1,25 +1,42 @@
 "use client";
 import { useState } from "react";
-
+import Link from "next/link";
 import Featured from "./components/Featured";
 import CultureInMotion from "./components/CultureInMotion";
 import OverlayCalender from "./components/OverlayCalender";
 import FloatingMiniCalendar from "./components/FloatingMiniCalendar";
-
+import WelcomeBanner from "./components/WelcomeBanner";
 import HudSidebar from "./components/HudSidebar";
-import TerminalHero from "./components/TerminalHero";
-import MissionFeed from "./components/MissionFeed";
+import { useUser } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
+import { api } from "../convex/_generated/api";
 import AccessOverlay from "./components/AccessOverlay";
 
 export default function Page() {
   const [showCalendar, setShowCalendar] = useState(false);
   const [granted, setGranted] = useState(false);
+  const { isSignedIn } = useUser();
+  const isAdmin = useQuery(api.admin.isAdmin, isSignedIn ? {} : "skip");
+
+  // Access text logic
+  let accessLevel = "PUBLIC";
+  let clearance = "COMMUNITY";
+  if (isSignedIn) {
+    accessLevel = "USER";
+    clearance = "AUTHORIZED";
+  }
+  if (isSignedIn && isAdmin) {
+    accessLevel = "ADMIN";
+    clearance = "ACTIVE";
+  }
 
   return (
     <>
       {/* LEFT: nav */}
       <HudSidebar />
 
+
+      
       {/* RIGHT: Calendar (top) → Incoming (fills) → Login (bottom) */}
       <aside className="fixed right-4 top-4 bottom-4 z-40 w-80 max-lg:hidden flex flex-col gap-4">
         {/* Calendar uses Dogica */}
@@ -27,29 +44,39 @@ export default function Page() {
           <FloatingMiniCalendar />
           
         </div>
-
-        {/* Incoming grows to fill remaining height */}
-      
-
- 
       </aside>
-
+{/* CENTER: main content starts exactly at nav’s right edge */}
+<div className="min-h-[5%] ml-[calc(6rem+1in)] mr-[22rem] px-10 pt-6">
+  {/* Banner row aligned to the right so it sits just to the LEFT of the calendar */}
+  <div className="flex justify-end">
+    <WelcomeBanner className="mt-2 " />
+  </div>
+</div>
+  {/* Give the rest of the content a little top spacing so it doesn't touch the banner */}
+  <section className="section mt-2"></section>
       {/* CENTER: main content starts exactly at nav’s right edge */}
       <div className="min-h-screen ml-[calc(6rem+1in)] mr-[22rem] px-10 pt-10">
         <section className="section">
           <h1 className="typewriter text-3xl md:text-5xl">
             <span className="chip chip--invert">INITIATING <br /> KLTRE_PROTOCOL</span>
           </h1>
-          <p className="mt-1 text-white/80 font-mono">
-            Access level: PUBLIC <br /><br /> Clearance: COMMUNITY
-          </p>
-          <div className="mt-6 flex gap-3">
-            <button className="chip chip--invert pr-3" onClick={() => setShowCalendar(true)}>
-              Open Calendar
-            </button>
-            <button className="chip" onClick={() => setGranted(true)}>
-              ###### 
-            </button>
+        <p className="mt-1 text-white/80 font-mono">
+          Access level: {accessLevel} <br /><br /> Clearance: {clearance}
+        </p>
+          <div className="mt-6 flex ">
+          {!isSignedIn ? (
+        <Link
+          href="/user"
+          className="px-6 py-3 rounded-xl border border-white text-white hover:bg-white hover:text-black transition"
+        >
+          <span className="chip chip--invert">Enter</span>
+        </Link>
+      ) : (
+        <span className="px-6 py-3 rounded-xl border border-white text-white/90">
+          <span className="chip chip--invert">Access Granted</span>
+        </span>
+      )}
+
           </div>
         </section>
 

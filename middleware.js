@@ -1,25 +1,17 @@
-// middleware.js
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-// Public (no sign-in required)
 const isPublic = createRouteMatcher([
   "/",
-  "/calander",
-  "/portfolio(.*)",
-  "/projects(.*)",
-  "/blog(.*)",
-  "/poi(.*)",
-  "/contact",
-  "/archive(.*)",
+  "/user(.*)",
+  "/auth/callback(.*)",
 ]);
 
-export default clerkMiddleware((auth, req) => {
-  // Protect everything NOT matched above
+export default clerkMiddleware(async (auth, req) => {
   if (!isPublic(req)) {
-    auth.protect();
+    await auth.protect(); // ✅ <-- fix
   }
 });
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api)(.*)"],
+  matcher: ["/((?!_next|.*\\..*).*)"],
 };
