@@ -84,4 +84,22 @@ allowed_identifiers: defineTable({
     createdAt: v.number(),
   }).index("by_value_type", ["value", "type"]),
 
+   talents: defineTable({
+    name: v.string(),               // Required
+    nameLower: v.string(),          // Derived: name.toLowerCase()
+    cityState: v.string(),          // Required
+    igHandle: v.optional(v.string()),
+    focus: v.optional(v.string()),
+    status: v.optional(v.string()),
+    createdAt: v.number(),          // Date.now()
+    updatedAt: v.number(),          // Date.now()
+    createdBy: v.optional(v.string()) // Clerk userId (optional but useful)
+  })
+    // sort lists by name
+    .index("by_name", ["name"])
+    // case-insensitive search (prefix)
+    .index("by_nameLower", ["nameLower"])
+    // useful for admin screens
+    .index("by_createdAt", ["createdAt"]),
 });
+

@@ -19,6 +19,7 @@ import type * as identifiers from "../identifiers.js";
 import type * as media from "../media.js";
 import type * as posts from "../posts.js";
 import type * as profile from "../profile.js";
+import type * as talents from "../talents.js";
 import type * as users from "../users.js";
 
 /**
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   media: typeof media;
   posts: typeof posts;
   profile: typeof profile;
+  talents: typeof talents;
   users: typeof users;
 }>;
 export declare const api: FilterApi<

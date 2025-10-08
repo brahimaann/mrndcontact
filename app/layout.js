@@ -3,6 +3,7 @@ import "./globals.css";
 import ClientLayout from "./ClientLayout";
 import Providers from "./providers";
 import { ClerkProvider } from "@clerk/nextjs";
+import Footer from "./components/Footer";
 
 export const metadata = {
   title: "MRND",
@@ -22,7 +23,10 @@ export default function RootLayout({ children }) {
         <ClerkProvider>
           <Providers>
             {/* If ClientLayout is a client component, keep it here; otherwise render {children} directly */}
-            <ClientLayout>{children}</ClientLayout>
+            <ClientLayout>{children}
+               <div className="ml-[6rem] mr-0 lg:mr-[22rem] px-6 md:px-10 relative z-20">
+    <Footer />
+  </div></ClientLayout>
           </Providers>
         </ClerkProvider>
       </body>
