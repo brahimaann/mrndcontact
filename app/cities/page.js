@@ -1,87 +1,107 @@
 // app/cities/page.js
-"use client";
-
 import Link from "next/link";
+import DataBlock from "../components/DataBlock";
 import HudSidebar from "../components/HudSidebar";
 
-export default function CitiesLanding() {
+export default function CitiesPage() {
   return (
-    <>
-      <HudSidebar />
-
-      {/* GUTTERS: left HUD offset; keep room for a future right rail on lg+ */}
-      <div className="min-h-screen ml-[calc(6rem+1in)] mr-0 lg:mr-[22rem] px-6 md:px-10 pt-8 bg-black font-dogica text-white">
-        {/* ===== <Header> — primary decoded header ===== */}
-        <header className="flex items-center justify-between gap-3">
-          <h1 className="text-xs tracking-[0.25em] uppercase opacity-80">
-            [ FILE: <span className="font-bold">THE CITIES</span> ]
+    <> 
+    <HudSidebar />
+    <main className="bg-black text-white min-h-screen">
+      <div className="ml-[calc(6rem+1in)] lg:mr-[22rem] px-6 md:px-10 py-10">
+        <header className="mb-6">
+          <h1 className="text-3xl mb-2 md:text-4xl font-[var(--font-dogica,monospace)] tracking-[0.25em]">
+            [ FILE: THE CITIES ]
           </h1>
-
-          {/* CTA must be visibly black text; give it a white chip so it’s legible on black */}
-          <Link
-            href="/magazine/cities"
-            className="text-black visited:text-black rounded-xl border border-white/10 bg-white px-4 py-2 text-[11px] tracking-[0.25em] uppercase hover:opacity-90 transition"
-            aria-label="Open Magazine — Issue 01"
-          >
-            Magazine — Issue 01
-          </Link>
+          <p className="mt-3 text-xs uppercase tracking-[0.3em]">
+            [ Decoding: Genesis Report ]
+          </p>
         </header>
 
-        {/* ===== <CuratorialBlurb> — decoded body block ===== */}
-        <section className="mt-6 max-w-prose">
-          <h2 className="text-[10px] tracking-[0.25em] uppercase text-white/70">
-            [ DECODING: GENESIS REPORT ]
-          </h2>
-
-          <div className="mt-3 border border-white/15 rounded-xl p-4 bg-black/40">
-            <p className="leading-[2.5] text-white/90">
-              <strong>The Cities</strong> is a living report of the Twin Cities’ first bloom—an
-              initialization signal for a culture we’re building together. We highlight
-              artists, organizers, and builders, threading personal stories into a shared
-              narrative of craft, connection, and homegrown abundance.
-            </p>
-            <p className="mt-3 leading-[2.5] text-white/80">
-              This page functions as the <em>Genesis Protocol</em> message file—your entry
-              point to the transmission. Proceed to the magazine for spreads, interviews,
-              and features as new packets are decrypted.
-            </p>
-          </div>
-        </section>
-
-        {/* ===== <TeaserCard> — high-priority data card / printer block ===== */}
-        <section className="mt-8">
-          <div className="border border-white/20 rounded-xl bg-white text-black">
-            {/* card header strip */}
-            <div className="px-5 py-2 border-b border-black/15">
-              <p className="text-[10px] tracking-[0.25em] uppercase opacity-70">
-                [ PRIORITY DATA: FEATURE PREVIEW ]
+        {/* Responsive container – single column <970px, two cols ≥970px */}
+        <div className="grid gap-5 mdx:grid-cols-[2fr_1fr]">
+          {/* LEFT STACK (Overview + Breakdown) */}
+          <div className="space-y-5">
+            <DataBlock title="Project Overview">
+              <p className="text-sm  leading-[2] opacity-80">
+                <strong>The Cities</strong> is a living report of the Twin Cities’
+                first bloom—an initialization signal for a culture we’re building
+                together. We highlight artists, organizers, and builders, threading
+                personal stories into a shared narrative of craft, connection, and
+                homegrown abundance. This page is the <em>Genesis Protocol</em> message
+                file—your entry point to the transmission.
               </p>
-            </div>
+            </DataBlock>
 
-            {/* card body */}
-            <div className="px-5 py-4">
-              <p className="text-sm leading-relaxed">
-                Portraits, field notes, and transcripts from creators shaping what’s next:
-                Jay • Mancapa Wanta • Lyric • + more.
-              </p>
-            </div>
-
-            {/* card footer / CTA (must be black text) */}
-            <div className="px-5 py-3 border-t border-black/15">
-              <Link
-                href="/magazine/cities"
-                className="text-black visited:text-black font-bold underline decoration-black/40 underline-offset-4 hover:decoration-black"
-                aria-label="Read the Teaser"
-              >
-                Read the Teaser →
-              </Link>
-            </div>
+            <DataBlock title="Issue 01: Breakdown">
+              <div className="grid leading-[2] md:grid-cols-3 gap-4">
+                <div className="md:col-span-2">
+                  <ul className="space-y-2 list-none marker:content-none m-0 p-0">
+                    <li>
+                      <span className="opacity-70">What we did:</span>
+                      <ul className="mt-1 ml-4 list-none marker:content-none">
+                        <li>- Portrait sessions</li>
+                        <li>- Field notes & transcripts</li>
+                        <li>- Features & spreads</li>
+                        <li>- Partners / locations</li>
+                      </ul>
+                    </li>
+                    <li className="pt-3">
+                      <span className="opacity-70">Outcomes:</span>
+                      <ul className="mt-1 ml-4 list-none marker:content-none">
+                        <li>- Sessions: 12 • Interviews: 8 • Themes: Craft, Care, Signal</li>
+                      </ul>
+                    </li>
+                    <li className="pt-3">
+                      <span className="opacity-70">Credits:</span>
+                      <ul className="mt-1 ml-4 list-none marker:content-none">
+                        <li>- Team: … / Tools: … / Dates: …</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+                <aside className="border border-white/25 p-3 text-xs">
+                  <div className="uppercase tracking-[0.2em] mb-2">Asset Log</div>
+                  <div className="opacity-70">Thumbs / selects / BTS notes</div>
+                </aside>
+              </div>
+            </DataBlock>
           </div>
-        </section>
 
-        {/* breathe above global footer */}
-        <div className="h-8" />
+ {/* RIGHT: Teaser */}
+  <div className="space-y-5 min-w-0">
+    <DataBlock title="Teaser: Magazine Cover">
+      <div className="flex flex-col gap-4">
+        <div className="w-full aspect-[4/5] max-w-full overflow-hidden border border-white/40 bg-black/50">
+          {/* use an <img> or next/image here */}
+          {/* <img src="/cover.jpg" alt="" className="w-full h-full object-cover" /> */}
+          <span className="block w-full h-full text-xs opacity-60 flex items-center justify-center">
+            [ COVER_IMAGE_PLACEHOLDER ]
+          </span>
+        </div>
+
+        <div className="text-sm">
+          <p className="opacity-80">
+            First decrypt reveals the Issue 01 cover and a peek into the spreads inside.
+          </p>
+          <div className="mt-4 space-x-6 text-xs uppercase tracking-[0.25em]">
+            <a href="/magazine/issue-01" className="text-black underline">Magazine — Issue 01</a>
+            <a href="/magazine/issue-01/teaser" className="text-black underline">Read the Teaser →</a>
+          </div>
+        </div>
       </div>
-    </>
+    </DataBlock>
+  </div>
+        </div>
+
+        {/* Footer */}
+        <DataBlock className="mt-8">
+          <p className="text-center text-sm uppercase tracking-[0.35em]">
+            good dope sells itself
+          </p>
+        </DataBlock>
+      </div>
+    </main>
+       </>
   );
 }

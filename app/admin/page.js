@@ -1,109 +1,93 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React from "react";
+import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { useState } from "react";
+import { cn } from "../lib/cn";
 
-export default function AdminPage() {
-  const router = useRouter();
-  const { isSignedIn } = useUser();
+export default function AdminIndex() {
+  const { user, isSignedIn } = useUser();
 
-  const admin = useQuery(api.admin.isAdmin, isSignedIn ? {} : "skip");
-  const list = useQuery(api.admin.listAllowed, isSignedIn ? {} : "skip");
-  const upsert = useMutation(api.admin.upsertAllowed);
-  const toggle = useMutation(api.admin.toggleAllowed);
-  const remove = useMutation(api.admin.removeAllowed);
+  const email = user?.primaryEmailAddress?.emailAddress || undefined;
+  const phone = user?.primaryPhoneNumber?.phoneNumber || undefined;
+  const clerkId = user?.id || undefined;
 
-  const [type, setType] = useState("EMAIL");
-  const [value, setValue] = useState("");
+  const isAdmin = useQuery(api.users.isAdmin, { email, phone, clerkId }) || false;
 
-  useEffect(() => {
-    if (isSignedIn && admin === false) router.replace("/");
-  }, [admin, isSignedIn, router]);
+  if (!isSignedIn) {
+    return (
+      <main className="bg-black text-white min-h-screen grid place-items-center p-6">
+        <div className="border border-white/40 p-6 text-center">
+          <div className="text-sm uppercase tracking-[0.3em]">Please sign in</div>
+        </div>
+      </main>
+    );
+  }
 
-  if (!isSignedIn) return <div className="p-6">Please sign in…</div>;
-  if (admin === undefined) return <div className="p-6">Checking admin…</div>;
-  if (admin === false) return null; // redirected
-
-  async function onAdd(e) {
-    e.preventDefault();
-    await upsert({ type, value, allowed: true });
-    setValue("");
+  if (!isAdmin) {
+    return (
+      <main className="bg-black text-white min-h-screen grid place-items-center p-6">
+        <div className="border border-white/40 p-6 text-center">
+          <div className="text-sm uppercase tracking-[0.3em]">Admins only</div>
+          <p className="text-xs opacity-70 mt-2">Your account doesn’t have access to this tool.</p>
+        </div>
+      </main>
+    );
   }
 
   return (
-    <main className="max-w-3xl mx-auto p-6">
-      <h1 className="text-2xl font-semibold mb-4">Admin – Access Control</h1>
+    <main className="bg-black text-white min-h-screen">
+      <div className="ml-[calc(6rem+1in)] lg:mr-[22rem] px-6 md:px-10 py-10">
+        <header className="mb-6">
+          <h1 className="text-3xl md:text-4xl font-[var(--font-dogica,monospace)] tracking-[0.25em]">
+            [ ADMIN · DASHBOARD ]
+          </h1>
+          <p className="mt-2 text-xs uppercase tracking-[0.3em] opacity-80">
+            talents · works · media
+          </p>
+        </header>
 
-      <form onSubmit={onAdd} className="flex flex-wrap items-end gap-3 border border-white/10 bg-white/5 rounded-xl p-4">
-        <label className="block">
-          <span className="text-xs uppercase tracking-wider text-white/70">Type</span>
-          <select
-            className="mt-1 bg-black border border-white/20 rounded-lg px-3 py-2"
-            value={type}
-            onChange={(e) => setType(e.target.value)}
+        {/* Actions row */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
+          {/* Add New Talent */}
+          <Link
+            href="/admin/talents/new"
+            className={cn(
+              "group border border-white/40 hover:bg-white/10 transition p-5",
+              "flex items-center justify-between"
+            )}
           >
-            <option value="EMAIL">Email</option>
-            <option value="PHONE">Phone</option>
-          </select>
-        </label>
-
-        <label className="block grow">
-          <span className="text-xs uppercase tracking-wider text-white/70">Value</span>
-          <input
-            className="mt-1 w-full bg-black border border-white/20 rounded-lg px-3 py-2"
-            placeholder={type === "EMAIL" ? "name@example.com" : "+16125551234"}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            required
-          />
-        </label>
-
-        <button className="px-4 py-2 rounded-lg border border-white hover:bg-white hover:text-black transition">
-          Add / Allow
-        </button>
-      </form>
-
-      <div className="mt-6 border border-white/10 rounded-xl overflow-hidden">
-        <div className="px-4 py-2 text-xs uppercase tracking-wider bg-white/5 border-b border-white/10">
-          Allow-listed Identifiers
-        </div>
-
-        <div className="divide-y divide-white/10">
-          {(list ?? []).map((row) => (
-            <div key={row._id} className="flex items-center gap-3 px-4 py-3">
-              <span className="text-[11px] px-2 py-1 rounded bg-white/10">{row.type}</span>
-              <span className="font-mono text-sm">{row.value}</span>
-              <span
-                className={
-                  "ml-auto text-xs px-2 py-1 rounded " +
-                  (row.allowed ? "bg-emerald-500/20 text-emerald-300" : "bg-amber-500/20 text-amber-300")
-                }
-              >
-                {row.allowed ? "allowed" : "blocked"}
-              </span>
-              <button
-                onClick={() => toggle({ id: row._id })}
-                className="px-3 py-1 rounded border border-white/20 hover:bg-white hover:text-black text-sm transition"
-              >
-                Toggle
-              </button>
-              <button
-                onClick={() => remove({ id: row._id })}
-                className="px-3 py-1 rounded border border-white/20 hover:bg-red-600 hover:border-red-600 text-sm transition"
-              >
-                Remove
-              </button>
+            <div>
+              <div className="text-sm uppercase tracking-[0.3em]">Add New Talent</div>
+              <p className="text-xs opacity-70 mt-1">
+                Create a profile for an artist (bio, tags, portrait).
+              </p>
             </div>
-          ))}
-        </div>
-      </div>
+            <span className="text-xl group-hover:translate-x-0.5 transition">+</span>
+          </Link>
 
-      {/* Optional: manage admins themselves */}
-      {/* You can add a second panel using listAdmins/addAdmin/removeAdmin similarly */}
+          {/* Add New Work */}
+          <Link
+            href="/admin/works/new"
+            className={cn(
+              "group border border-white/40 hover:bg-white/10 transition p-5",
+              "flex items-center justify-between"
+            )}
+          >
+            <div>
+              <div className="text-sm uppercase tracking-[0.3em]">Add New Work</div>
+              <p className="text-xs opacity-70 mt-1">
+                Upload cover, set title/type, and document a work.
+              </p>
+            </div>
+            <span className="text-xl group-hover:translate-x-0.5 transition">+</span>
+          </Link>
+        </section>
+
+        {/* You can add more admin cards here later (Events, Posts, Media Library, etc.) */}
+      </div>
     </main>
   );
 }

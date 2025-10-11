@@ -340,3 +340,26 @@ body {
   opacity: 20%;
    transition:all 0.3s ease;
 }
+
+/* Dogica font hook */
+@font-face {
+  font-family: 'Dogica';
+  src: url('/dogica.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+:root { --font-dogica: 'Dogica', ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+/* Keep all Cities/HUD bullets off + prevent rogue separators */
+.hud-nav, .hud-nav ul, .hud-nav li { list-style: none; padding-left: 0; margin-left: 0; }
+.hud-nav li::marker { content: ""; }
+.hud-nav a::before, .hud-nav a::after { content: none !important; }
+
+/* Links that must be pure black (no visited purple) */
+a.text-black { color: #000 !important; text-decoration: underline; }
+a.text-black:visited { color: #000 !important; }
+
+/* Optional: guard against prose plugin leaking bullets */
+.not-prose ul, .not-prose li { list-style: none; }
+.not-prose li::marker { content: ""; }

@@ -14,7 +14,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cobe": "^0.6.5",
-    "convex": "^1.27.3",
+    "convex": "^1.27.5",
     "convex-helpers": "^0.1.104",
     "gsap": "^3.13.0",
     "lucide-react": "^0.544.0",

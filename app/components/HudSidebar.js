@@ -67,13 +67,29 @@ export default function HudSidebar({}) {
             href="/cities"
             active={pathname === "/cities"}
           />
-
+          <Item
+            id="works"
+            label="Works"
+            href="/works"
+            active={pathname === "/work"}
+          />
+         
+            <Item
+              id="roster"
+              label="Roster"
+              active={pathname === "/admin/talents"}
+              href="/admin/talents"
+              className="mt-4 block px-4 py-2 rounded-lg  text-sm hover:bg-white hover:text-black rotate-[-90] transition"
+            >
+              Roster
+            </Item>
+    
           {isSignedIn && isAdmin && (
             <Item
               id="admin"
               label="Admin"
-              active={pathname === "/admin/talents"}
-              href="/admin/talents"
+              active={pathname === "/admin"}
+              href="/admin"
               className="mt-4 block px-4 py-2 rounded-lg  text-sm hover:bg-white hover:text-black rotate-[-90] transition"
             >
               Admin

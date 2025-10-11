@@ -17,10 +17,12 @@ import type * as admin from "../admin.js";
 import type * as events from "../events.js";
 import type * as identifiers from "../identifiers.js";
 import type * as media from "../media.js";
+import type * as migrations from "../migrations.js";
 import type * as posts from "../posts.js";
 import type * as profile from "../profile.js";
 import type * as talents from "../talents.js";
 import type * as users from "../users.js";
+import type * as works from "../works.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -35,10 +37,12 @@ declare const fullApi: ApiFromModules<{
   events: typeof events;
   identifiers: typeof identifiers;
   media: typeof media;
+  migrations: typeof migrations;
   posts: typeof posts;
   profile: typeof profile;
   talents: typeof talents;
   users: typeof users;
+  works: typeof works;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
