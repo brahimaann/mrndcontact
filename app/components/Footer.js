@@ -5,7 +5,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="z-[-1] mrnd-footer">
+    <footer className=" mrnd-footer">
 
       {/* Footer content */}
       <div className="container">
@@ -28,9 +28,9 @@ export default function Footer() {
             </ul>
           </div>
 
-          <form className="newsletter" onSubmit={(e)=>{e.preventDefault(); alert("Thanks for joining!"); e.target.reset();}}>
+          <form className="newsletter max-[970px]:hidden" onSubmit={(e)=>{e.preventDefault(); alert("Thanks for joining!"); e.target.reset();}}>
             <div className="label">Stay in the loop</div>
-            <div className="join">
+            <div className="join ">
               <input type="email" placeholder="email@domain" required aria-label="Email" />
               <button type="submit">Join</button>
             </div>

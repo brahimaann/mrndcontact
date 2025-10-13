@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import Image from "next/image";
 
 const PAGE_SIZE = 25;
 
@@ -28,15 +29,29 @@ export default function TalentRosterPage() {
   const isDone = data?.isDone ?? true;
 
   return (
-    <div className="ml-[calc(6rem+1in)] mr-0 lg:mr-[22rem] px-6 md:px-10 pt-8">
-      <header className="flex items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold"> Roster</h1>
+    <>
+    <div className="flex justify-center pt-5 mb-4 min-[550px]:hidden"> {/* Added a wrapper for centering and padding */}
+         <Link href="/" className="block" aria-label="Go to Home">
+        <Image
+            src="/MRND%20TP.png" // or "/mrnd-tp.png" if you renamed
+            alt="Modern Renaissance — Home"
+            width={160} // tweak as needed
+            height={60} // tweak as needed
+            priority
+            // Keep only centering and necessary sizing/visual classes
+            className="mx-auto h-12 w-auto object-center hover:opacity-90 transition"
+        />
+        </Link>
+      </div>
+    <div className="ml-[calc(6rem+1in)] max-[550px]:ml-[calc(6rem)] mr-0 lg:mr-[22rem] px-6 md:px-10 pt-8">
+      <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+        <h1 className="text-xl md:text-2xl font-semibold"> Roster</h1>
 
         {/* REVISED BUTTON: Styled as a black item with inverse hover */}
         <Link
           href="/admin/talents/new"
-          className="link-black rounded-xl border border-black/40 px-4 py-2 text-sm
-          text-black visited:text-black hover:bg-black hover:text-white transition"
+          className="link-black w-full md:w-auto rounded-xl border border-black/40 px-4 py-3 text-sm
+          text-black visited:text-black hover:bg-black hover:text-white transition text-center"
         >
           + Add New Talent
         </Link>
@@ -48,42 +63,39 @@ export default function TalentRosterPage() {
           value={term}
           onChange={(e) => setTerm(e.target.value)}
           placeholder="Search by name…"
-          className="w-full  rounded-lg border border-white/20 bg-black/40 px-3 py-2 text-sm text-white outline-none placeholder-white/40"
+          className="w-full  border border-white/20 bg-black/40 px-3 py-2 text-sm text-white outline-none placeholder-white/40"
         />
       </div>
 
-      <div className="mt-6 border border-white/15 rounded-xl overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-white/5">
-            <tr>
-              <th className="text-left px-4 py-2">Name</th>
-            </tr>
-          </thead>
-          <tbody>
+        {/* 3. Roster List: Converted from horizontal table row to vertical, clean list view */}
+      <div className="mt-6  overflow-hidden">
+        {page.length > 0 ? (
+          // Use a simple DIV structure for mobile-friendly stacking
+          <div className="w-full text-sm">
             {page.map((row) => (
-              <tr key={row._id} className="border-t border-white/10">
-                <td className="px-4 py-2 text-black">
-                  <Link
-                    href={`/admin/talents/${row._id}`}
-                    className="link-black text-black visited:text-black hover:text-black
-                 "
-                  >
-                    {row.name}
-                  </Link>
-                </td>
-
-              </tr>
+              // Use block-level list items for better touch targets
+              <div 
+                key={row._id} 
+                className="border-t border-white/10 bg-white/5 last:border-b last:border-white/10"
+              >
+                {/* Full-width link for better tapping */}
+                <Link
+                  href={`/admin/talents/${row._id}`}
+                  className="link-black text-black visited:text-black hover:text-black block px-4 py-3"
+                >
+                  {row.name}
+                </Link>
+              </div>
             ))}
-            {page.length === 0 && (
-              <tr>
-                <td className="px-4 py-6 text-white/60">No results</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+          </div>
+        ) : (
+          // No results state
+          <div className="px-4 py-6 text-white/60 text-sm">No results</div>
+        )}
       </div>
 
-      <div className="mt-4 flex gap-3">
+      {/* Pagination Buttons */}
+      <div className="mt-4 flex gap-3 justify-center md:justify-start">
         <button
           onClick={() => setCursor(undefined)}
           disabled={!cursor}
@@ -99,6 +111,8 @@ export default function TalentRosterPage() {
           Next →
         </button>
       </div>
+
     </div>
+    </>
   );
 }

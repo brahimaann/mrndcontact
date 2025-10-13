@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
           <Providers>
             {/* If ClientLayout is a client component, keep it here; otherwise render {children} directly */}
             <ClientLayout>{children}
-               <div className="ml-[6rem] mr-0 lg:mr-[22rem] px-6 md:px-10 relative z-20">
+               <div className="ml-[6rem] mr-0 lg:mr-[22rem] px-6 md:px-10 relative ">
     <Footer />
   </div></ClientLayout>
           </Providers>

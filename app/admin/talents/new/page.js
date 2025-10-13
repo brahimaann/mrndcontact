@@ -29,7 +29,7 @@ export default function NewTalentPage() {
   }
 
   return (
-    <div className="ml-[calc(6rem+1in)] mr-0 lg:mr-[22rem] px-6 md:px-10 pt-8">
+    <div className="ml-[calc(6rem+1in)] max-[550px]:ml-[calc(6rem)] mr-0 lg:mr-[22rem] px-6 md:px-10 pt-8">
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">New Talent</h1>
         <Link href="/admin/talents" className="text-sm underline">Cancel</Link>

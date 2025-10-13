@@ -6,7 +6,7 @@ export default function DataBlock({ title, className = "", children }) {
   return (
     <section
       className={clsx(
-        "border border-white/40 rounded-sm p-4 md:p-5 bg-black text-white",
+        "rounded-sm p-4 md:p-5 bg-black text-white",
         "shadow-[0_0_0_1px_rgba(255,255,255,.08)_inset]",
         "font-[var(--font-dogica,monospace)] tracking-wide leading-relaxed",
         className

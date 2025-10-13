@@ -17,7 +17,7 @@ export default function WorksNav() {
   const pathname = usePathname(); // App Router hook for active state
   return (
     <nav className="mb-4">
-      <ul className="flex flex-wrap items-center gap-3 text-sm font-[var(--font-dogica,monospace)] tracking-[0.35em] uppercase">
+      <ul className="flex list-none flex-wrap items-center gap-3 text-[1rem] font-[var(--font-dogica,monospace)] tracking-[0.35em] uppercase">
         {ITEMS.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -25,7 +25,7 @@ export default function WorksNav() {
               <Link
                 href={item.href}
                 className={cn(
-                  "px-2 py-1 border border-white/40 hover:bg-white/10 transition",
+                  "px-2  link-black leading-[1.5] border border-white/40 hover:bg-white/10 transition",
                   "text-white no-underline",
                   // Active = bold + dark invert per your spec
                   isActive

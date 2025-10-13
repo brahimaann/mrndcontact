@@ -151,7 +151,7 @@ export default function AdminNewWorkPage() {
 
   return (
     <main className="bg-black leading-2 text-white min-h-screen">
-      <div className="ml-[calc(6rem+1in)] lg:mr-[22rem] px-6 md:px-10 py-10">
+      <div className="ml-[calc(6rem+1in)] max-[550px]:ml-[calc(6rem)] lg:mr-[22rem] px-6 md:px-10 py-10">
         <header className="mb-6">
           <h1 className="text-3xl md:text-4xl font-[var(--font-dogica,monospace)] tracking-[0.25em]">
             [ ADMIN · NEW WORK ]

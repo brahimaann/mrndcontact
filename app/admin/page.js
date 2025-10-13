@@ -6,6 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { cn } from "../lib/cn";
+import Image from "next/image";
 
 export default function AdminIndex() {
   const { user, isSignedIn } = useUser();
@@ -38,10 +39,25 @@ export default function AdminIndex() {
   }
 
   return (
+    <>
+    <div className="flex justify-center pt-5 mb-4 min-[550px]:hidden"> {/* Added a wrapper for centering and padding */}
+     <Link href="/" className="block" aria-label="Go to Home">
+    <Image
+        src="/MRND%20TP.png" // or "/mrnd-tp.png" if you renamed
+        alt="Modern Renaissance — Home"
+        width={160} // tweak as needed
+        height={60} // tweak as needed
+        priority
+        // Keep only centering and necessary sizing/visual classes
+        className="mx-auto h-12 w-auto object-center hover:opacity-90 transition"
+    />
+    </Link>
+  </div>
+
     <main className="bg-black text-white min-h-screen">
-      <div className="ml-[calc(6rem+1in)] lg:mr-[22rem] px-6 md:px-10 py-10">
+      <div className="ml-[calc(6rem+1in)] max-[550px]:ml-[calc(6rem)] lg:mr-[22rem] px-6 md:px-10 py-10">
         <header className="mb-6">
-          <h1 className="text-3xl md:text-4xl font-[var(--font-dogica,monospace)] tracking-[0.25em]">
+          <h1 className="text-[1rem] md:text-4xl font-[var(--font-dogica,monospace)] tracking-[0.25em]">
             [ ADMIN · DASHBOARD ]
           </h1>
           <p className="mt-2 text-xs uppercase tracking-[0.3em] opacity-80">
@@ -50,12 +66,12 @@ export default function AdminIndex() {
         </header>
 
         {/* Actions row */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
+        <section className="link-black leading-[1.5] grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
           {/* Add New Talent */}
           <Link
             href="/admin/talents/new"
             className={cn(
-              "group border border-white/40 hover:bg-white/10 transition p-5",
+              "link-black group  hover:bg-white/10 transition p-5",
               "flex items-center justify-between"
             )}
           >
@@ -72,8 +88,8 @@ export default function AdminIndex() {
           <Link
             href="/admin/works/new"
             className={cn(
-              "group border border-white/40 hover:bg-white/10 transition p-5",
-              "flex items-center justify-between"
+              "group  hover:bg-white/10 transition p-5",
+              "flex link-black items-center justify-between"
             )}
           >
             <div>
@@ -88,6 +104,7 @@ export default function AdminIndex() {
 
         {/* You can add more admin cards here later (Events, Posts, Media Library, etc.) */}
       </div>
-    </main>
+    </main>  
+    </>
   );
 }

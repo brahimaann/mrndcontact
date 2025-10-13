@@ -43,7 +43,7 @@ export default function FloatingMiniCalendar() {
   // Range for event dots (this month)
   const start = cursor.getTime();
   const end = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1).getTime();
-  const eventsByDay = useQuery(api?.events?.inRange, { start, end }) ?? {};
+  const eventsByDay = useQuery(api?.events?.listInRange, { start, end }) ?? {};
 
   const { label, weeks } = useMemo(() => getMonthGrid(cursor), [cursor]);
 
@@ -91,7 +91,7 @@ export default function FloatingMiniCalendar() {
             >◀</button>
 
             <button
-              onClick={() => setOverlayOpen(true)}
+              onClick={() => setOverlayOpen(false)}
               title="Open full calendar"
               style={{ ...btn(), fontWeight: 600, padding: "2px 8px" }}
               onMouseEnter={(e)=>hoverBg(e,true)} onMouseLeave={(e)=>hoverBg(e,false)}

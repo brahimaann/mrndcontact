@@ -2,19 +2,41 @@
 import Link from "next/link";
 import DataBlock from "../components/DataBlock";
 import HudSidebar from "../components/HudSidebar";
+import Image from "next/image";
 
 export default function CitiesPage() {
   return (
     <> 
     <HudSidebar />
+    <div className="flex justify-center pt-5 mb-4 min-[550px]:hidden"> {/* Added a wrapper for centering and padding */}
+     <Link href="/" className="block" aria-label="Go to Home">
+    <Image
+        src="/MRND%20TP.png" // or "/mrnd-tp.png" if you renamed
+        alt="Modern Renaissance — Home"
+        width={160} // tweak as needed
+        height={60} // tweak as needed
+        priority
+        // Keep only centering and necessary sizing/visual classes
+        className="mx-auto h-12 w-auto object-center hover:opacity-90 transition"
+    />
+    </Link>
+  </div>
     <main className="bg-black text-white min-h-screen">
-      <div className="ml-[calc(6rem+1in)] lg:mr-[22rem] px-6 md:px-10 py-10">
+      <div className="ml-[calc(6rem+1in)] max-[550px]:ml-[calc(6rem)] lg:mr-[22rem] px-6 md:px-10 py-10">
         <header className="mb-6">
-          <h1 className="text-3xl mb-2 md:text-4xl font-[var(--font-dogica,monospace)] tracking-[0.25em]">
-            [ FILE: THE CITIES ]
-          </h1>
-          <p className="mt-3 text-xs uppercase tracking-[0.3em]">
-            [ Decoding: Genesis Report ]
+          <div className="flex ml-[calc(-6rem-1in)] max-[550px]:ml-[calc(-6rem)] justify-center pt-5 mb-4 "> {/* Added a wrapper for centering and padding */}
+              <Image
+                  src="/SNKTRY%20logo.png" // or "/mrnd-tp.png" if you renamed
+                  alt="Modern Renaissance — Home"
+                  width={160} // tweak as needed
+                  height={60} // tweak as needed
+                  priority
+                  // Keep only centering and necessary sizing/visual classes
+                  className="mx-auto h-12 w-auto object-center hover:opacity-90 transition"
+              />
+            </div>
+          <p className="mt-3 leading-[2] text-xs uppercase tracking-[0.3em]">
+            [ Decoding: THE CITIES — Issue 01 ]
           </p>
         </header>
 
@@ -24,12 +46,12 @@ export default function CitiesPage() {
           <div className="space-y-5">
             <DataBlock title="Project Overview">
               <p className="text-sm  leading-[2] opacity-80">
-                <strong>The Cities</strong> is a living report of the Twin Cities’
-                first bloom—an initialization signal for a culture we’re building
-                together. We highlight artists, organizers, and builders, threading
-                personal stories into a shared narrative of craft, connection, and
-                homegrown abundance. This page is the <em>Genesis Protocol</em> message
-                file—your entry point to the transmission.
+                <strong>The Cities</strong> is a living report of the Twin Cities’ evolving culture,
+                 built by artists, organizers, designers, and neighbors. 
+                 Together we’re weaving personal stories into a resilient foundation of craft,
+                  connection, and homegrown abundance—dedicated to the diamonds in the rough and
+                   the roses in the concrete.
+                   <br /><br />By us, for our future
               </p>
             </DataBlock>
 
@@ -40,36 +62,31 @@ export default function CitiesPage() {
                     <li>
                       <span className="opacity-70">What we did:</span>
                       <ul className="mt-1 ml-4 list-none marker:content-none">
-                        <li>- Portrait sessions</li>
-                        <li>- Field notes & transcripts</li>
-                        <li>- Features & spreads</li>
+                        <li>- Portraits</li>
+                        <p className="leading-[.5]">capturing their being in time and space</p>
+                        <li>- Interviews</li>
+                        <p className="leading-[.5]">capturing a little bit of what they share from their minds</p>
                         <li>- Partners / locations</li>
+                        <p className="leading-[.5]">Big thank you to STUDIO APPARATUS</p>
                       </ul>
                     </li>
                     <li className="pt-3">
                       <span className="opacity-70">Outcomes:</span>
                       <ul className="mt-1 ml-4 list-none marker:content-none">
-                        <li>- Sessions: 12 • Interviews: 8 • Themes: Craft, Care, Signal</li>
+                        <li>-Subjects: 22 • Portraits: 110 • Vol 1 Mag • </li>
                       </ul>
                     </li>
-                    <li className="pt-3">
-                      <span className="opacity-70">Credits:</span>
-                      <ul className="mt-1 ml-4 list-none marker:content-none">
-                        <li>- Team: … / Tools: … / Dates: …</li>
-                      </ul>
-                    </li>
+                    
                   </ul>
                 </div>
-                <aside className="border border-white/25 p-3 text-xs">
-                  <div className="uppercase tracking-[0.2em] mb-2">Asset Log</div>
-                  <div className="opacity-70">Thumbs / selects / BTS notes</div>
-                </aside>
+                
               </div>
             </DataBlock>
+            <br />
           </div>
 
  {/* RIGHT: Teaser */}
-  <div className="space-y-5 min-w-0">
+  <div className="hidden space-y-5 min-w-0">
     <DataBlock title="Teaser: Magazine Cover">
       <div className="flex flex-col gap-4">
         <div className="w-full aspect-[4/5] max-w-full overflow-hidden border border-white/40 bg-black/50">
@@ -96,7 +113,7 @@ export default function CitiesPage() {
 
         {/* Footer */}
         <DataBlock className="mt-8">
-          <p className="text-center text-sm uppercase tracking-[0.35em]">
+          <p className="text-center style-bold text-sm uppercase tracking-[0.35em]">
             good dope sells itself
           </p>
         </DataBlock>

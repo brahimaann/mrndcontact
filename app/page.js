@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import Footer from "./components/Footer";
+import Image from "next/image";
 import FloatingMiniCalendar from "./components/FloatingMiniCalendar";
 import WelcomeBanner from "./components/WelcomeBanner";
 import HudSidebar from "./components/HudSidebar";
@@ -30,6 +30,19 @@ export default function Page() {
 
   return (
 <>
+<div className="flex justify-center pt-5 mb-4 min-[550px]:hidden"> {/* Added a wrapper for centering and padding */}
+     <Link href="/" className="block" aria-label="Go to Home">
+    <Image
+        src="/MRND%20TP.png" // or "/mrnd-tp.png" if you renamed
+        alt="Modern Renaissance — Home"
+        width={160} // tweak as needed
+        height={60} // tweak as needed
+        priority
+        // Keep only centering and necessary sizing/visual classes
+        className="mx-auto h-12 w-auto object-center hover:opacity-90 transition"
+    />
+    </Link>
+  </div>
   {/* LEFT NAV (unchanged) */}
   <HudSidebar />
 
@@ -37,20 +50,19 @@ export default function Page() {
 <div className="grid grid-rows-[1fr_auto] ml-[6rem] mr-0 px-6 md:px-10 pt-8">
     {/* ROW 1: Content area split into main + right rail */}
     <main className="min-h-0 overflow-x-hidden">
-<div className="grid gap-6 lg:gap-8 grid-cols-[1fr_18rem] md:grid-cols-[1fr_20rem] lg:grid-cols-[1fr_22rem]">
-        {/* LEFT COLUMN — scrollable content */}
+<div className="grid gap-6 lg:gap-8 grid-cols-[1fr_18rem] md:grid-cols-[1fr_20rem] lg:grid-cols-[1fr_22rem] max-[770px]:grid-cols-1">        {/* LEFT COLUMN — scrollable content */}
         <div className="min-h-0 overflow-x-hidden pr-1">
           {/* Banner aligned to the right edge of the left column */}
-          <div className="flex justify-end">
+          <div className="flex max-[885px]:hidden justify-end">
             <WelcomeBanner className="mt-2" />
           </div>
 
           {/* Content */}
-          <section className="section mt-4">
-            <h1 className="typewriter text-3xl md:text-5xl">
-              <span className="chip chip--invert">GENESIS_PROTOCOL</span>
+          <section className="section max-[770px]:text-sm mt-4">
+            <h1 className="typewriter text-[1.5rem] md:text-5xl">
+              <span className="leading-[1.6] chip chip--invert">GENESIS<br />_PROTOCOL</span>
             </h1>
-            <p className="mt-1 text-white/80 font-mono">
+            <p className="mt-1 leading-[1.6] text-[1rem]  text-white/80 font-mono">
               Access level: {accessLevel}
               <br />
               <br />
@@ -74,10 +86,10 @@ export default function Page() {
 
           <section className="section grid gap-6 lg:grid-cols-12">
             <div className="lg:col-span-7">
-              <h2 className="text-xs tracking-[0.25em] uppercase text-white/70">
+              <h2 className="text-[1rem] md:text-xs tracking-[0.25em] uppercase text-white/70">
                 [ SYS.BODY ]
               </h2>
-              <h3 className="mt-2 max-w-[34ch] leading-[1.6] [text-wrap:balance] text-xs tracking-[0.25em] uppercase text-white/70">
+              <h3 className="mt-2 max-w-[34ch] leading-[1.6] [text-wrap:balance] text-[.75rem] md:text-xs tracking-[0.25em] uppercase text-white/70">
                 Planting Seeds for Tomorrow’s Trees
               </h3>
             </div>
@@ -85,8 +97,8 @@ export default function Page() {
         </div>
 
         {/* RIGHT COLUMN — sticky rail that fills viewport height */}
-        <aside className="block min-h-0">
-          <div className="sticky top-0 h-dvh pb-4">
+        <aside className="block max-[770px]:hidden min-h-0">
+          <div className="sticky top-0 h-fill pb-4">
     <div className="h-full flex flex-col gap-4">
       <div className="font-dogica border border-white/20 rounded-xl p-3 bg-black text-white shrink-0">
         <FloatingMiniCalendar />

@@ -34,7 +34,7 @@ export default function HudSidebar({}) {
           aria-label={label}
         >
           <span
-            className={`chip chip--invert ${active ? "ring-2 ring-black" : ""}`}
+            className={`chip chip--invert `}
           >
             {label}
           </span>
@@ -44,7 +44,7 @@ export default function HudSidebar({}) {
   );
 
   return (
-    <aside className="fixed left-0 top-5 h-screen w-[6rem] px-5 z-40">
+    <aside className="fixed left-0 top-5 h-screen w-[3rem] pl-2 pr-5 z-40">
       <div className="px-4 pt-4 pb-3 rotate-0 [writing-mode:horizontal-tb]">
         <Link href="/" className="block" aria-label="Go to Home">
           {/* If you kept the space in the filename */}
@@ -54,13 +54,13 @@ export default function HudSidebar({}) {
             width={160} // tweak as needed
             height={60} // tweak as needed
             priority
-            className="mx-auto h-12 w-auto object-contain hover:opacity-90 transition"
+            className="mx-auto right-[-0.5rem] h-12 w-auto object-contain hover:opacity-90 transition max-[550px]:hidden"
           />
         </Link>
       </div>
 
-      <nav className="h-[80%] flex flex-col items-center justify-between py-8">
-        <ul className="flex flex-col  items-center gap-12 py-3">
+      <nav className="h-[80%] flex flex-col items-center justify-between py-5">
+        <ul className=" list-none flex flex-col  items-center gap-12 py-3">
           <Item
             id="cities"
             label="Cities"
@@ -73,7 +73,7 @@ export default function HudSidebar({}) {
             href="/works"
             active={pathname === "/work"}
           />
-         
+         {isSignedIn && isAdmin && (
             <Item
               id="roster"
               label="Roster"
@@ -83,7 +83,7 @@ export default function HudSidebar({}) {
             >
               Roster
             </Item>
-    
+         )}
           {isSignedIn && isAdmin && (
             <Item
               id="admin"
