@@ -43,7 +43,27 @@ export default function FloatingMiniCalendar() {
   // Range for event dots (this month)
   const start = cursor.getTime();
   const end = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1).getTime();
-  const eventsByDay = useQuery(api?.events?.listInRange, { start, end }) ?? {};
+  const eventsRaw = useQuery(api?.events?.listInRange, { start, end }) ?? [];
+  
+  // Group events by day (using toDateString() as key to match getMonthGrid)
+  const eventsByDay = useMemo(() => {
+    const grouped = {};
+    if (Array.isArray(eventsRaw)) {
+      eventsRaw.forEach((event) => {
+        const eventStart = new Date(event.start);
+        const dayKey = new Date(
+          eventStart.getFullYear(),
+          eventStart.getMonth(),
+          eventStart.getDate()
+        ).toDateString();
+        if (!grouped[dayKey]) {
+          grouped[dayKey] = [];
+        }
+        grouped[dayKey].push(event);
+      });
+    }
+    return grouped;
+  }, [eventsRaw]);
 
   const { label, weeks } = useMemo(() => getMonthGrid(cursor), [cursor]);
 
@@ -186,7 +206,15 @@ export default function FloatingMiniCalendar() {
       {/* Hover dropdown rendered OUTSIDE the calendar via portal */}
       {hoverData && (
         <BodyPortal>
-          <HoverDropdown {...hoverData} onClose={() => setHoverData(null)} />
+          <HoverDropdown 
+            dateKey={hoverData.key}
+            items={hoverData.items}
+            x={hoverData.x}
+            y={hoverData.y}
+            w={hoverData.w}
+            h={hoverData.h}
+            onClose={() => setHoverData(null)} 
+          />
         </BodyPortal>
       )}
 
@@ -207,7 +235,7 @@ export default function FloatingMiniCalendar() {
 
 /* ---------- Hover popover (outside via portal) ---------- */
 
-function HoverDropdown({ key: _k, items, x, y, onClose }) {
+function HoverDropdown({ dateKey, items, x, y, w, h, onClose }) {
   // position with viewport coords; flip if near right edge
   const width = 220;
   const maxH = 160;

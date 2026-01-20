@@ -1,5 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { api } from "./_generated/api";
 
 export const listTalents = query({
   args: {},
@@ -15,8 +16,29 @@ export const getTalentBySlug = query({
 
 export const listWorksByMedium = query({
   args: { type: v.string(), limit: v.optional(v.number()) },
-  handler: async ({ db }, { type, limit = 48 }) =>
-    db.query("works").withIndex("by_type", q => q.eq("type", type)).order("desc").take(limit),
+  handler: async ({ db }, { type, limit = 48 }) => {
+    const works = await db.query("works").withIndex("by_type", q => q.eq("type", type)).order("desc").take(limit);
+    // Join with talents to get artist names
+    return Promise.all(works.map(async (work) => {
+      let talentName = null;
+      if (work.talentSlug) {
+        // Try to find talent by slug, nameLower, or name
+        const talent = await db.query("talents")
+          .withIndex("by_slug", q => q.eq("slug", work.talentSlug))
+          .first()
+          ?? await db.query("talents")
+          .withIndex("by_nameLower", q => q.eq("nameLower", work.talentSlug.toLowerCase()))
+          .first()
+          ?? await db.query("talents")
+          .withIndex("by_name", q => q.eq("name", work.talentSlug))
+          .first();
+        if (talent) {
+          talentName = talent.name;
+        }
+      }
+      return { ...work, artistName: talentName };
+    }));
+  },
 });
 
 export const listWorksByTalent = query({
@@ -72,5 +94,46 @@ export const attachCloudinaryPublicId = mutation({
     if (!work) throw new Error("Work not found");
     await db.patch(work._id, { coverPublicId: publicId });
     return work._id;
+  },
+});
+
+// List all works (for admin)
+export const listAllWorks = query({
+  args: { limit: v.optional(v.number()) },
+  handler: async ({ db }, { limit = 500 }) => {
+    return await db.query("works").order("desc").take(limit);
+  },
+});
+
+// Delete work (admin only)
+export const deleteWork = mutation({
+  args: { id: v.id("works") },
+  handler: async (ctx, { id }) => {
+    // Check admin status
+    const admin = await ctx.runQuery(api.admin.isAdmin, {});
+    if (!admin) throw new Error("Not admin");
+    await ctx.db.delete(id);
+  },
+});
+
+// Update work (admin only)
+export const updateWork = mutation({
+  args: {
+    id: v.id("works"),
+    title: v.optional(v.string()),
+    description: v.optional(v.string()),
+    type: v.optional(v.string()),
+    coverPublicId: v.optional(v.string()),
+    date: v.optional(v.string()),
+    credits: v.optional(v.array(v.string())),
+    metadata: v.optional(v.any()),
+  },
+  handler: async (ctx, args) => {
+    // Check admin status
+    const admin = await ctx.runQuery(api.admin.isAdmin, {});
+    if (!admin) throw new Error("Not admin");
+    const { id, ...updates } = args;
+    await ctx.db.patch(id, updates);
+    return id;
   },
 });

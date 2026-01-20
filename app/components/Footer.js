@@ -19,7 +19,7 @@ export default function Footer() {
           <nav>
             <div className="label">Explore</div>
             <ul>
-              <li><a href="/cities">Cities</a></li>
+              <li><a href="/projects">Projects</a></li>
               
             </ul>
           </nav>

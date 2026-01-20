@@ -1,18 +1,15 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
+// Make all routes public (disable authentication)
 const isPublic = createRouteMatcher([
-  "/",
-  "/user(.*)",
-  "/auth/callback(.*)",
-  '/works(.*)',
-  '/cities(.*)',
-  '/admin/talents(.*)',
+  "/(.*)", // Match all routes
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
-  if (!isPublic(req)) {
-    await auth.protect(); // ✅ <-- fix
-  }
+  // Authentication is disabled - all routes are public
+  // if (!isPublic(req)) {
+  //   await auth.protect();
+  // }
 });
 
 export const config = {

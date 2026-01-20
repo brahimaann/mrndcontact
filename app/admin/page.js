@@ -67,6 +67,23 @@ export default function AdminIndex() {
 
         {/* Actions row */}
         <section className="link-black leading-[1.5] grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
+          {/* Manage Works & Events */}
+          <Link
+            href="/admin/manage"
+            className={cn(
+              "link-black group  hover:bg-white/10 transition p-5",
+              "flex items-center justify-between border-2 border-white/40"
+            )}
+          >
+            <div>
+              <div className="text-sm uppercase tracking-[0.3em]">Manage Content</div>
+              <p className="text-xs opacity-70 mt-1">
+                View, edit, and delete works and calendar events.
+              </p>
+            </div>
+            <span className="text-xl group-hover:translate-x-0.5 transition">→</span>
+          </Link>
+
           {/* Add New Talent */}
           <Link
             href="/admin/talents/new"

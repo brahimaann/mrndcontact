@@ -62,16 +62,22 @@ export default function HudSidebar({}) {
       <nav className="h-[80%] flex flex-col items-center justify-between py-5">
         <ul className=" list-none flex flex-col  items-center gap-12 py-3">
           <Item
-            id="cities"
-            label="Cities"
-            href="/cities"
-            active={pathname === "/cities"}
+            id="projects"
+            label="Projects"
+            href="/projects"
+            active={pathname?.startsWith("/projects")}
           />
           <Item
             id="works"
             label="Works"
             href="/works"
             active={pathname === "/work"}
+          />
+          <Item
+            id="magazine"
+            label="Vol 1"
+            href="/magazine/root"
+            active={pathname?.startsWith("/magazine")}
           />
          {isSignedIn && isAdmin && (
             <Item
@@ -117,6 +123,34 @@ export default function HudSidebar({}) {
             </Link>
           )}
         </ul>
+        
+        {/* Admin Sign In Link at Bottom */}
+        <div className="mt-auto pb-5">
+          <Link
+            href={isSignedIn ? "/admin" : "/user"}
+            className="inline-flex items-center justify-center vertical-text hover:opacity-70 transition"
+            title={isSignedIn ? "Admin Dashboard" : "Admin Sign In"}
+            aria-label={isSignedIn ? "Admin Dashboard" : "Admin Sign In"}
+          >
+            <span className="chip chip--invert inline-flex items-center justify-center">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+                style={{ transform: 'rotate(180deg)' }}
+              >
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+              </svg>
+            </span>
+          </Link>
+        </div>
       </nav>
     </aside>
   );

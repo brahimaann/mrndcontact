@@ -22,10 +22,12 @@ export default function WorksLayout({ children }) {
   </div>
     <main className="bg-black text-white min-h-screen">
       <div className="ml-[calc(6rem+1in)] max-[550px]:ml-[calc(6rem)] lg:mr-[22rem] px-6 md:px-10 py-10">
-        <header className="mb-3">
-          <h1 className="text-[1rem] md:text-4xl font-[var(--font-dogica,monospace)] tracking-[0.25em]">
-            [ WORKS · ]
-          </h1>
+        <header className="mb-3 pt-6">
+          <Link href="/works" className="inline-block bg-white px-4 py-2 no-underline" style={{ backgroundColor: '#fff' }}>
+            <h1 className="text-[1rem] md:text-4xl font-[var(--font-dogica,monospace)] tracking-[0.25em] hover:opacity-70 transition cursor-pointer text-black" style={{ color: '#000' }}>
+              [ WORKS · ]
+            </h1>
+          </Link>
         </header>
 
         {/* Top row tabs / nav */}

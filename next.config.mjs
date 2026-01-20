@@ -7,6 +7,8 @@ const nextConfig = {
       { protocol: "https", hostname: "lh4.googleusercontent.com" },
       { protocol: "https", hostname: "lh5.googleusercontent.com" },
       { protocol: "https", hostname: "lh6.googleusercontent.com" },
+      { protocol: "https", hostname: "*.supabase.co" },
+      { protocol: "https", hostname: "*.supabase.in" },
     ],
     // or, if you prefer the simple list:
     // domains: ["lh3.googleusercontent.com","lh4.googleusercontent.com","lh5.googleusercontent.com","lh6.googleusercontent.com"],

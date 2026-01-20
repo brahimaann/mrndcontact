@@ -285,7 +285,7 @@ body {
 }
 
 /* ——— Footer base ——— */
-.mrnd-footer{ --fill-image: url("/brand/mrnd.png"); background:#ffffff; color:#fff; overflow:hidden; }
+.mrnd-footer{ --fill-image: url("/brand/mrnd.png"); background:transparent; color:#fff; overflow:hidden; }
 .mrnd-footer .container{ max-width:1120px; margin:0 auto; padding:24px 16px; }
 .mrnd-footer a{ color:#b3b3b3; text-decoration:none; }
 .mrnd-footer a:hover{ color:#6e6e6e; }
@@ -360,6 +360,70 @@ body {
 a.text-black { color: #000 !important; text-decoration: underline; }
 a.text-black:visited { color: #000 !important; }
 
+/* Timeline project button links - ensure black text on white background, no blue */
+main.bg-black a[href*="/projects/"],
+a[href*="/projects/cities"],
+a[href^="/projects/"] {
+  color: #000 !important;
+  text-decoration: none !important;
+  background-color: #fff !important;
+}
+main.bg-black a[href*="/projects/"]:visited,
+a[href*="/projects/cities"]:visited,
+a[href^="/projects/"]:visited {
+  color: #000 !important;
+}
+main.bg-black a[href*="/projects/"]:hover,
+a[href*="/projects/cities"]:hover,
+a[href^="/projects/"]:hover {
+  color: #fff !important;
+  background-color: #000 !important;
+}
+
 /* Optional: guard against prose plugin leaking bullets */
 .not-prose ul, .not-prose li { list-style: none; }
 .not-prose li::marker { content: ""; }
+
+/* ASCII Globe Background */
+#ascii-globe-bg {
+  position: fixed !important;
+  inset: 0;
+  z-index: 0 !important;
+
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+
+  white-space: pre;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+
+  background: transparent;
+  color: rgba(0,0,0,0.4) !important;
+
+  pointer-events: none;
+  user-select: none;
+
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Smaller globe on mobile to fit better */
+@media (max-width: 767px) {
+  #ascii-globe-bg {
+    transform: scale(0.95) !important;
+    transform-origin: center center;
+  }
+}
+
+/* More visible on desktop screens */
+@media (min-width: 768px) {
+  #ascii-globe-bg {
+    color: rgba(0,0,0,0.35) !important;
+  }
+}
+
+/* Ensure content on homepage is above globe */
+body > div > div[class*="grid"] {
+  position: relative;
+  z-index: 1;
+}

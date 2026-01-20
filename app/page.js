@@ -5,6 +5,7 @@ import Image from "next/image";
 import FloatingMiniCalendar from "./components/FloatingMiniCalendar";
 import WelcomeBanner from "./components/WelcomeBanner";
 import HudSidebar from "./components/HudSidebar";
+import AsciiGlobeBackground from "./components/AsciiGlobeBackground";
 import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
@@ -30,6 +31,7 @@ export default function Page() {
 
   return (
 <>
+  <AsciiGlobeBackground />
 <div className="flex justify-center pt-5 mb-4 min-[550px]:hidden"> {/* Added a wrapper for centering and padding */}
      <Link href="/" className="block" aria-label="Go to Home">
     <Image
@@ -47,7 +49,7 @@ export default function Page() {
   <HudSidebar />
 
   {/* MAIN: full viewport height with footer pinned */}
-<div className="grid grid-rows-[1fr_auto] ml-[6rem] mr-0 px-6 md:px-10 pt-8">
+<div className="grid grid-rows-[1fr_auto] ml-[6rem] max-[550px]:ml-0 mr-0 px-6 md:px-10 pt-8 relative z-10">
     {/* ROW 1: Content area split into main + right rail */}
     <main className="min-h-0 overflow-x-hidden">
 <div className="grid gap-6 lg:gap-8 grid-cols-[1fr_18rem] md:grid-cols-[1fr_20rem] lg:grid-cols-[1fr_22rem] max-[770px]:grid-cols-1">        {/* LEFT COLUMN — scrollable content */}
@@ -59,7 +61,7 @@ export default function Page() {
 
           {/* Content */}
           <section className="section max-[770px]:text-sm mt-4">
-            <h1 className="typewriter text-[1.5rem] md:text-5xl">
+            <h1 className="text-[1.5rem] md:text-5xl">
               <span className="leading-[1.6] chip chip--invert">GENESIS<br />_PROTOCOL</span>
             </h1>
             <p className="mt-1 leading-[1.6] text-[1rem]  text-white/80 font-mono">
@@ -68,20 +70,12 @@ export default function Page() {
               <br />
               Clearance: {clearance}
             </p>
-            <div className="mt-6 flex">
-              {!isSignedIn ? (
-                <Link
-                  href="/user"
-                  className="px-6 py-3 rounded-xl border border-white text-white hover:bg-white hover:text-black transition"
-                >
-                  <span className="chip chip--invert">Enter</span>
-                </Link>
-              ) : (
-                <span className="px-6 py-3 rounded-xl border border-white text-white/90">
-                  <span className="chip chip--invert">Access Granted</span>
-                </span>
-              )}
-            </div>
+              <div className="mt-6 max-[550px]:mt-4">
+                <h1 className="text-[2rem] md:text-8xl lg:text-9xl max-[550px]:text-[1.5rem] leading-tight whitespace-pre-line">
+                  <span className="block">MODERN</span>
+                  <span className="block mt-2 md:mt-4 lg:mt-6">RENAISSANCE</span>
+                </h1>
+              </div>
           </section>
 
           <section className="section grid gap-6 lg:grid-cols-12">

@@ -7,6 +7,8 @@ import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import { useMemo, useState, useCallback } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { useUser } from "@clerk/nextjs";
+import Link from "next/link";
 
 
 const localizer = momentLocalizer(moment);
@@ -27,9 +29,11 @@ const rbcCss = `
 `;
 
 export default function CalendarScreen() {
-  // keep the window we’re showing (so we only fetch that range)
+  // keep the window we're showing (so we only fetch that range)
   const [range, setRange] = useState({ from: null, to: null });
   const [modal, setModal] = useState(null); // {start, end} or null
+  const { isSignedIn } = useUser();
+  const isAdmin = useQuery(api.admin.isAdmin, isSignedIn ? {} : "skip");
 
   const eventsRaw = useQuery(api.events.listEvents, {
     from: range.from ?? undefined,
@@ -79,7 +83,17 @@ export default function CalendarScreen() {
       <style>{rbcCss}</style>
 
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-2xl font-bold mb-3">Events & Key Dates</h1>
+        <div className="flex justify-between items-center mb-3">
+          <h1 className="text-2xl font-bold">Events & Key Dates</h1>
+          {isSignedIn && isAdmin && (
+            <Link
+              href="/admin/manage"
+              className="px-4 py-2 border border-black/20 rounded hover:bg-black hover:text-white transition text-sm uppercase tracking-[0.2em]"
+            >
+              ← Manage
+            </Link>
+          )}
+        </div>
         <p className="text-sm opacity-70 mb-4">
           Browse upcoming events. Have access? Select a day/time to add an item.
         </p>
@@ -104,6 +118,7 @@ export default function CalendarScreen() {
         <AddEventModal
           initial={modal}
           onClose={closeModal}
+          isAdmin={isSignedIn && isAdmin}
           onCreate={async (payload) => {
             await createEvent({
               code: payload.code, // must be 13647 by default
@@ -122,7 +137,7 @@ export default function CalendarScreen() {
   );
 }
 
-function AddEventModal({ initial, onClose, onCreate }) {
+function AddEventModal({ initial, onClose, onCreate, isAdmin = false }) {
   const [code, setCode] = useState("");
   const [alias, setAlias] = useState("");
   const [title, setTitle] = useState("");
@@ -159,30 +174,56 @@ function AddEventModal({ initial, onClose, onCreate }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4">
+    <div 
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 p-4"
+      onClick={(e) => {
+        // Close modal when clicking backdrop
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+      style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
+    >
       <form
         onSubmit={submit}
-        className="w-full max-w-lg bg-black border border-white/15 rounded-xl p-4 space-y-3"
+        onClick={(e) => e.stopPropagation()}
+        className="w-[60%] bg-white border border-gray-300 rounded-xl p-6 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl"
+        style={{ 
+          position: 'relative',
+          zIndex: 10000,
+          margin: 'auto',
+          backgroundColor: '#ffffff'
+        }}
       >
-        <h2 className="text-xl font-semibold">Add Calendar Item</h2>
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-xl font-semibold text-black">Add Calendar Item</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-gray-600 hover:text-black text-2xl leading-none"
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </div>
 
-        <label className="block text-sm opacity-80">Access Code</label>
+        <label className="block text-sm text-gray-700 font-medium">Access Code</label>
         <input
           value={code}
           onChange={(e) => setCode(e.target.value)}
           placeholder="Enter code (e.g. 13647)"
-          className="w-full bg-black border border-white/20 rounded px-3 py-2"
+          className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-black"
           required
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm opacity-80">Your alias (optional)</label>
+            <label className="block text-sm text-gray-700 font-medium">Your alias (optional)</label>
             <input
               value={alias}
               onChange={(e) => setAlias(e.target.value)}
               placeholder="name or org"
-              className="w-full bg-black border border-white/20 rounded px-3 py-2"
+              className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-black"
             />
           </div>
 
@@ -192,64 +233,83 @@ function AddEventModal({ initial, onClose, onCreate }) {
               type="checkbox"
               checked={allDay}
               onChange={(e) => setAllDay(e.target.checked)}
+              className="w-4 h-4"
             />
-            <label htmlFor="allday" className="text-sm opacity-80">All day</label>
+            <label htmlFor="allday" className="text-sm text-gray-700 font-medium">All day</label>
           </div>
         </div>
 
-        <label className="block text-sm opacity-80">Title</label>
+        <label className="block text-sm text-gray-700 font-medium">Title</label>
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Event title"
-          className="w-full bg-black border border-white/20 rounded px-3 py-2"
+          className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-black"
           required
         />
 
-        <label className="block text-sm opacity-80">Description (optional)</label>
+        <label className="block text-sm text-gray-700 font-medium">Description (optional)</label>
         <textarea
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
           placeholder="Details, location, link…"
-          className="w-full bg-black border border-white/20 rounded px-3 py-2 min-h-[80px]"
+          className="w-full bg-white border border-gray-300 rounded px-3 py-2 min-h-[80px] text-black"
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm opacity-80">Starts</label>
+            <label className="block text-sm text-gray-700 font-medium">Starts</label>
             <input
               type="datetime-local"
               value={start}
               onChange={(e) => setStart(e.target.value)}
-              className="w-full bg-black border border-white/20 rounded px-3 py-2"
+              className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-black"
               required
             />
           </div>
           <div>
-            <label className="block text-sm opacity-80">Ends</label>
+            <label className="block text-sm text-gray-700 font-medium">Ends</label>
             <input
               type="datetime-local"
               value={end}
               onChange={(e) => setEnd(e.target.value)}
-              className="w-full bg-black border border-white/20 rounded px-3 py-2"
+              className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-black"
               required
             />
           </div>
         </div>
 
-        {err && <p className="text-red-400 text-sm">{err}</p>}
+        {err && <p className="text-red-600 text-sm font-medium">{err}</p>}
 
-        <div className="flex justify-end gap-2 pt-2">
-          <button type="button" onClick={onClose} className="px-4 py-2 border border-white/20 rounded">
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={busy}
-            className="px-4 py-2 bg-white text-black rounded hover:opacity-90 disabled:opacity-50"
-          >
-            {busy ? "Saving…" : "Add"}
-          </button>
+        <div className="flex justify-between items-center gap-2 pt-2">
+          {isAdmin && (
+            <Link
+              href="/admin/manage"
+              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 transition text-sm text-black"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
+            >
+              ← Back to Manage
+            </Link>
+          )}
+          <div className="flex gap-2 ml-auto">
+            <button 
+              type="button" 
+              onClick={onClose} 
+              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 transition text-black"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={busy}
+              className="px-4 py-2 bg-black text-white rounded hover:opacity-90 disabled:opacity-50 transition"
+            >
+              {busy ? "Saving…" : "Add"}
+            </button>
+          </div>
         </div>
       </form>
     </div>

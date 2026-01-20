@@ -1,14 +1,16 @@
 // app/ClientLayout.js
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
+import Loader from "./components/ui/Loader";
 
 export default function ClientLayout({ children }) {
   const router = useRouter();
   const pathname = usePathname();
   const firstLoad = useRef(true);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   // Show the pixel grid full-screen
   const coverScreen = () =>
@@ -60,6 +62,7 @@ export default function ClientLayout({ children }) {
         return;
       }
       e.preventDefault();
+      setIsNavigating(true);
       await coverScreen();
       router.push(a.pathname);
     };
@@ -71,12 +74,23 @@ export default function ClientLayout({ children }) {
   // Uncover the screen on navigation
   useEffect(() => {
     if (firstLoad.current) return; // Don't uncover on initial load, that's handled separately
-    uncoverScreen();
+    uncoverScreen().then(() => {
+      setIsNavigating(false);
+    });
   }, [pathname]);
 
   return (
-    <>
-      {children}
+    <div className="min-h-screen flex flex-col max-[550px]:flex-col">
+      <div className="flex-1">
+        {children}
+      </div>
+
+      {/* Loading overlay during navigation */}
+      {isNavigating && (
+        <div className="fixed inset-0 bg-black flex items-center justify-center z-[9998]">
+          <Loader size={24} label="Loading page" />
+        </div>
+      )}
 
       {/* Pixel grid */}
       <div className="load-grid">
@@ -84,6 +98,6 @@ export default function ClientLayout({ children }) {
           <div key={i} className="load-grid-item" />
         ))}
       </div>
-    </>
+    </div>
   );
 }
